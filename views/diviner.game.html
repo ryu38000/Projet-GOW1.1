@@ -17,11 +17,12 @@ include('./views/page.header.html');
 				</fieldset>  
 				<?php }
 				$this->message = $this->getmess();
+		
 				if($this->message !=""){
 				?> 
 				<script type="text/javascript">
-					 var message = '<?php echo $this->message; ?>' ;
-					 alert (message);
+					 var mess = "<?php echo $this->message; ?>" ;
+					 alert (mess);
 				 </script>
 				<?php }	
 				 if( $this->getcarteValide() ){

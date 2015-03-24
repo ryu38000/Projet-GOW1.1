@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 class diviner_game
 {
@@ -101,11 +101,11 @@ class diviner_game
 						WHERE userid="'.$this->diviner.'"';
 					$res=$db->query($sql);
 	
-					$mess =  "L'utilisateur perd 5 points";
+					$mess =  "Il semblerait que vous avez subitement quitté la partie précédente! Il n'y a pas de place pour la triche ici!! Vous êtes donc sanctionné de 5 points.";
 					$this->setmess($mess);
 					}
 				else{
-					$mess =  "Vous n'avez pas assez de points à perdre! Nulos";
+					$mess =  "Il semblerait que vous avez subitement quitté la partie précédente! Il n'y a pas de place pour la triche ici!! Vous n'avez pas de points. Mais GARE A VOUS la prochaine fois, vous perdrez 5 points ;).";
 					$this->setmess($mess);
 				}
 		      	      }
@@ -129,13 +129,13 @@ class diviner_game
         { 
 			$this->raisin= mysqli_fetch_assoc($this->result);
 			
-			// construction de l'adresse de l'enregistrement à partir du nom du fichier son
+			// construction de l'adresse de l'enregistrement à  partir du nom du fichier son
 			$this->adresse = "enregistrements/".$this->raisin['cheminEnregistrement'];
 			
 			//initialisation du booléen qui représentera la condition finale pour que la partie soit acceptée
-			// Il deviendra faux si le moindre critère n'est pas rempli durant la procédure
+			// Il deviendra faux si le moindre crità¨re n'est pas rempli durant la procédure
 			$partieok=true;
-			//Connexion à la BD
+			//Connexion à  la BD
        		$db = db::getInstance();
        		
 			//récupération du contenu de la carte
@@ -151,20 +151,20 @@ class diviner_game
 			$res=$db->query($sql);
 			$this->res5= mysqli_fetch_assoc($res);
 
-			// si le créateur de la carte et le devin sont la même personne, on passe à l'enregistrement suivant
+			// si le créateur de la carte et le devin sont la màªme personne, on passe à  l'enregistrement suivant
 			if ($this->res3['idDruide'] == $this->diviner)
 			{
 				$partieok=false;
 			}
-			// si le devin a déjà joué cette carte et a eu un résultat (faux ou juste), on passe à l'enregistrement suivant.
-			//Si cette partie a été quitté précipitemment ou à cause d'un pb technique (reussie=en cours), il peut la rejouer.
+			// si le devin a déjà  joué cette carte et a eu un résultat (faux ou juste), on passe à  l'enregistrement suivant.
+			//Si cette partie a été quitté précipitemment ou à  cause d'un pb technique (reussie=en cours), il peut la rejouer.
 
 			if(($this->res5['reussie']=="oui")||($this->res5['reussie']=="non")||($this->res5['reussie']=="en cours")) #A modifier!
 			{
 				$partieok=false;
 			}
 
-			// si rien de s'oppose à ce que l'enregistrement soit proprosé
+			// si rien de s'oppose à  ce que l'enregistrement soit proprosé
 			if ($partieok)
 			{
 		
@@ -197,7 +197,7 @@ class diviner_game
 	private function update()
 	{
 		//Insertion des informations dans la table parties
-		//connexion à la bd  
+		//connexion à  la bd  
 			$db = db::getInstance();
  	 
 			 $sql = 'INSERT INTO parties
