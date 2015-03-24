@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Game of Words
 ================
 
@@ -23,3 +24,4 @@ Contributors
 --------------
 Nejat Maryam
 Graceffa David
+
