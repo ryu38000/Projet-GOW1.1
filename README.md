@@ -19,4 +19,7 @@ Requirements
 * Chrome
 * Javascript activated
 
-
+Contributors
+--------------
+Nejat Maryam
+Graceffa David
