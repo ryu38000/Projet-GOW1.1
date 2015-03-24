@@ -1,5 +1,4 @@
-<?php
-$title = 'Devin';
+<?php $title = 'Devin';
 include('./views/page.header.html');
 ?>
 <div id="main-container">
@@ -16,7 +15,15 @@ include('./views/page.header.html');
 					<?php } ?>
 					</ul>
 				</fieldset>  
-				<?php }			 
+				<?php }
+				$this->message = $this->getmess();
+				if($this->message !=""){
+				?> 
+				<script type="text/javascript">
+					 var message = '<?php echo $this->message; ?>' ;
+					 alert (message);
+				 </script>
+				<?php }	
 				 if( $this->getcarteValide() ){
 				 ?> 
 				<fieldset>

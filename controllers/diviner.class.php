@@ -21,7 +21,6 @@ class diviner_game
 	private $result= '';
 	private $sanction ='';
 	private $score='';
-	private $pointsSanction = 5;
 
 
 	private $carteValide = false;
@@ -29,6 +28,7 @@ class diviner_game
 	private $adresse = '';
 	private $reussie = 'en cours';
 	private $temps='';
+	private $mess='';
 
 	public function set_mode($mode)
 	{
@@ -39,7 +39,7 @@ class diviner_game
 	{
 		if ( $this->init() )
         {
-		$this->sanctionLastPartie();
+			$this->sanctionLastPartie();	
 			if($this->selectpartie()){
 				$this->update();	
 			}
@@ -91,18 +91,23 @@ class diviner_game
 				$this->score = mysqli_fetch_assoc($res);  
 			
 				if ($this->score['scoreDevin'] >= 5){
-					$this->score['scoreDevin']-=$this->getpointsSanction();
-					$this->score['scoreGlobal']-=$this->getpointsSanction();
+					$this->pointsSanction=5;
+
+					$this->score['scoreDevin']-=5;
+					$this->score['scoreGlobal']-=5;
+
 					$sql='UPDATE score 
-						SET scoreDevin="'.$this->score['scoreDevin'].'" AND scoreGlobal ="'.$this->score['scoreGlobal'].'"
+						SET scoreDevin="'.$this->score['scoreDevin'].'", scoreGlobal ="'.$this->score['scoreGlobal'].'"
 						WHERE userid="'.$this->diviner.'"';
 					$res=$db->query($sql);
 	
-					echo "L'utilisateur perd 5 points";
-				}
+					$mess =  "L'utilisateur perd 5 points";
+					$this->setmess($mess);
+					}
 				else{
-					echo "Vous n'avez pas assez de points à perdre! Nulos";
-				}		
+					$mess =  "Vous n'avez pas assez de points à perdre! Nulos";
+					$this->setmess($mess);
+				}
 		      	      }
 			}
 		}
@@ -218,12 +223,16 @@ class diviner_game
 	public function getcarteValide(){
 		return $this->carteValide;
 	}
-
-        public function getpointsSanction(){
-                return $this->pointsSanction;
+	
+        public function getmess(){
+                return $this->mess;
         }
 
+	public function setmess($mess){
+               $this->mess=$mess;
+        }
 
 }
 
 ?>
+
