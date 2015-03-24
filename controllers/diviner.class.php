@@ -70,27 +70,41 @@ class diviner_game
 			$this->sanction = mysqli_fetch_assoc($res);
 
 		if($this->sanction['reussie'] == "en cours"){
-			$sql = "SELECT scoreDevin
-				FROM score
-				WHERE userid ='".$this->diviner."'";
-			$res = $db->query($sql);
-			$this->score = mysqli_fetch_assoc($res);  
-			
-			if ($this->score['scoreDevin'] >= 5){
-				$this->score['scoreDevin']-=5;
-				$sql='UPDATE score 
-					SET scoreDevin="'.$this->score['scoreDevin'].'"
-					WHERE userid="'.$this->diviner.'"';
-				$res=$db->query($sql);
+				
+		   $sql = "SELECT *
+                                FROM sanctionCarte
+                                WHERE idDevin ='".$this->diviner."' AND enregistrementID='".$this->sanction['enregistrementID']."'";
+                        $res = $db->query($sql);
+                        $this->existSanction = mysqli_num_rows()($res);
+			if($this->existSanction != 0){
 
-			echo "blablé";
+//Ajout de la carte sanctionné dans la BDD
+				$sql = "INSERT INTO sanctionCarte
+                                        (idDevin,enregistrementID)
+					VALUES ($this->diviner,$this->sanction['enregistrementID'])
+                               if( $res = $db->query($sql)){
+				$sql = "SELECT scoreDevin
+					FROM score
+					WHERE userid ='".$this->diviner."'";
+				$res = $db->query($sql);
+				$this->score = mysqli_fetch_assoc($res);  
+			
+				if ($this->score['scoreDevin'] >= 5){
+					$this->score['scoreDevin']-=5;
+					$sql='UPDATE score 
+						SET scoreDevin="'.$this->score['scoreDevin'].'"
+						WHERE userid="'.$this->diviner.'"';
+					$res=$db->query($sql);
+	
+					echo "L'utilisateur perd 5 points";
+				}
+				else{
+					echo "Vous n'avez pas assez de points à perdre! Nulos";
+				}		
+		      	      }
 			}
-			else{
-				echo "boubou";
-			}		
 		}
-			echo "KFC";
-	}//on va les ajouter dans la table sanctionCarte 
+	}
 
 	private function selectpartie()
 	{
