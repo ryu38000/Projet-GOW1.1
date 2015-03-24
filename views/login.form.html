@@ -1,0 +1,43 @@
+<?php
+$title = 'Se connecter';
+include('./views/page.header.html');
+?>
+<div id="main-container">
+</div>
+	<div id="center-block">
+	<div id="jrForm">
+	<form class="form-jr" role="form" id="login" method="post" action="./">
+		<?php if ( $this->errors ) { ?>
+		<fieldset>
+			<legend>Erreurs</legend>
+			<ul>
+				<?php foreach ( $this->errors as $error ) { ?>
+				<li>
+					<?php echo $error; ?>
+				</li>
+				<?php } ?>
+			</ul>
+		</fieldset>
+		<?php } ?>
+		<fieldset >
+			<legend class="form-jr-heading">Se connecter</legend>
+			<dl>
+				<dt><label for="username">Nom d'utilisateur</label></dt>
+				<dd><input type="text" id="username" name="username" required="required" value="<?php echo htmlspecialchars($this->username); ?>" /></dd>
+			</dl>
+			<dl>
+				<dt><label for="userpass">Mot de passe</label></dt>
+				<dd><input type="password" id="userpass" name="userpass" required="required" value="" /></dd>
+			</dl>
+			<div id="form-cmd">
+				<input type="submit" id="submit_form" name="submit_form" class="btn btn-lg btn-primary btn-block" />
+				<input type="hidden" name="mode" value="<?php echo $this->mode; ?>"/>
+			</div>
+		</fieldset>
+	</form>
+	</div>
+	</div> <!-- fin jrForm  -->
+</div>
+<?php
+include('./views/page.footer.html');
+?>

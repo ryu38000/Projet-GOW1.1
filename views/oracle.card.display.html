@@ -1,0 +1,338 @@
+<?php
+$title = 'Oracle Description';
+include('./views/page.header.html');
+?>
+<!--Popup Overlay -->
+<div id="facebox">
+	<div class="content">
+		<div style="padding:5px;">
+		<h2><?php echo $lang['warning']; ?></h2><br/><h3><?php echo $lang['cut_sound']; ?></h3> 
+		<button class="close" style="cursor: pointer; background:#000; color:white; text-align:center; font-weight:bold; position:absolute; bottom:20%; left:50%; padding:0 2px; width:200px; height:30px; line-height:20px">OK</button>
+		<div class="resume">&nbsp;</div>
+		</div>
+	</div>
+</div>
+<!-- Fin Popup -->
+<div id="main-container">
+	<div id="userid" data-userid="<?php echo $this->oracle; ?>" style="display:none"></div>
+	<div id="userlang" data-userlang="<?php echo $this->userlang; ?>" style="display:none"></div>
+	<div id="cardid" data-cardid="<?php echo $this->res['carteID']; ?>" style="display:none"></div>
+	<div id="levelcard" data-levelcard="<?php echo $this->res['nivcarte']; ?>" style="display:none"></div>
+	<div id="jrForm">
+		<form class="form-jr" role="form" id="description.carte" name="formSaisie" onsubmit="return validate()" method="post" action="./index.php?mode=oracle.result">   
+					<?php if ( $this->errors ) { ?>
+					<fieldset class="errors">
+					<legend>Erreurs</legend>
+						<ul>
+						<?php foreach ( $this->errors as $error ) { ?>
+							<li>
+								<?php echo $error; ?>
+							</li>
+						<?php } ?>
+						</ul>
+					<?php } ?>
+					</fieldset>
+					<fieldset>
+						<legend class="form-jr-heading"><?php echo $lang['card_descr']; ?></legend>
+						<dl>
+							<dt><label for="beware"><?php echo $lang['beware_time']; ?></label></dt>
+						</dl>
+						<dl>
+							<dt><label for="mot"><?php echo $lang['word_to_find'];?></label> : <?php echo $this->res['mot'].'</br>'; ?></dt>
+							<dt><label for="tabou1"><?php echo $lang['taboo_1'];?></label> : <?php echo $this->res['tabou1'].'</br>'; ?></dt>
+							<dt><label for="tabou2"><?php echo $lang['taboo_2'];?></label> : <?php echo $this->res['tabou2'].'</br>'; ?></dt>
+							<dt><label for="tabou3"><?php echo $lang['taboo_3'];?></label> : <?php echo $this->res['tabou3'].'</br>'; ?></dt>
+							<dt><label for="tabou4"><?php echo $lang['taboo_4'];?></label> : <?php echo $this->res['tabou4'].'</br>'; ?></dt>
+							<dt><label for="tabou5"><?php echo $lang['taboo_5'];?></label> : <?php echo $this->res['tabou5'].'</br>'; ?></dt>
+						</dl>
+						<h3><span id="countdown" class="timer"></span></h3>
+						<dl>
+							<h3><?php echo $lang['start_describe']; ?></h3>
+												    <p style="text-align:center;">
+						    <audio id="preview"></audio>
+						    </p>
+						    <hr />
+						    <button class="btn btn-primary" id="record"><?php echo $lang['record']; ?></button> </br>
+						    <button class="btn btn-primary" id="stop" disabled><?php echo $lang['send_description']; ?></button></br>
+						    <button class="btn btn-primary" id="delete" disabled><?php echo $lang['erase']; ?></button>
+						    <div id="container" style="padding:1em 2em;"></div>
+						</dl>
+						<dl> <p id="audiovide"></p></dl>
+						<div id="form-cmd"style="visibility: hidden">
+							<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" 
+							 name="submit_form" value="<?php echo $lang['validate']; ?>"/> 
+						</div>
+					</fieldset>
+			</form>
+		</div>
+	</div>
+</div>
+<!--
+	ici rajouter un message d'erreur quand aucune carte n'existe dans la langue de l'utilisateur
+-->
+<script language="JavaScript" type="text/javascript">
+// Script pour le PopUp  l'ouverture de la page , prévenir l'utilisateur de couper le son
+$(document).ready(function() {
+// select the overlay element - and "make it an overlay"
+$("#facebox").overlay({
+
+// some mask tweaks suitable for facebox-looking dialogs
+mask: {
+// you might also consider a "transparent" color for the mask
+color: '#000000',
+// load mask a little faster
+loadSpeed: 1000,
+// very transparent
+opacity: 0.7
+},
+// disable this for modal dialog-type of overlays
+closeOnClick: true,
+// we want to use the programming API
+api: true
+
+// load it after delay
+})
+var ol = $("#facebox").overlay({api: true});
+// wait 20 seconds, then load the overlay
+setTimeout(function() {
+ol.load();
+}, 0);
+setTimeout(function() {
+ol.close();
+}, 10000);
+});
+</script>
+
+<script>
+// Timer
+// Intialisation du timerà 80 secondes, le popup étant de 10 secondes maximum.
+var seconds = 70;
+function secondPassed() {
+    var minutes = Math.round((seconds - 30)/60);
+    var remainingSeconds = seconds % 60;
+    if (remainingSeconds < 10) {
+        remainingSeconds = "0" + remainingSeconds;  
+    }
+    document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
+    if (seconds == 0) {
+        clearInterval(countdownTimer);
+	document.location.href="index.php?mode=oracle.timeout"
+        document.getElementById('countdown').innerHTML = "Trop Tard !";
+    } else {
+        seconds--;
+    }
+}
+var countdownTimer = setInterval('secondPassed()', 1000);
+
+//fin timer
+</script>
+
+<script>
+
+// Enregistrement d'un fichiers audio .wav sur le serveur
+
+        // PostBlob method uses XHR2 and FormData to submit 
+        // recorded blob to the PHP server
+        function PostBlob(blob, fileType, fileName) {
+            // FormData
+            var formData = new FormData();
+            formData.append(fileType + '-filename', fileName);
+            formData.append(fileType + '-blob', blob);
+
+            // progress-bar
+            var hr = document.createElement('hr');
+            container.appendChild(hr);
+            var strong = document.createElement('strong');
+            strong.id = 'percentage';
+            strong.innerHTML = fileType + ' oracleupload progress: ';
+            container.appendChild(strong);
+            var progress = document.createElement('progress');
+            container.appendChild(progress); 
+
+
+	//Récupération des identifiants pour insertion dans la table enregistrement
+	var userid = $("#userid").attr("data-userid");
+	var userlang = $("#userlang").attr("data-userlang");
+	var cardid = $("#cardid").attr("data-cardid");
+	var levelcard = $("#levelcard").attr("data-levelcard");
+
+            // POST the Blob using XHR2
+	    xhr('save.php?userid="'+userid+'"&userlang="'+userlang+'"&cardid="'+cardid+'"&levelcard="'+levelcard+'"', formData, progress, percentage, function(fileURL) {
+                container.appendChild(document.createElement('hr'));
+		
+                var mediaElement = document.createElement(fileType);
+
+                var source = document.createElement('source');
+                var href = location.href.substr(0, location.href.lastIndexOf('/') + 1);
+                source.src = href + fileURL;
+
+               // if (fileType == 'video') source.type = 'video/webm; codecs="vp8, vorbis"';
+	       if (fileType == 'audio') source.type = 'audio/mp3';
+		//if (fileType == 'audio') source.type = 'audio/wav';
+               //if (fileType == 'audio') source.type = !!navigator.mozGetUserMedia ? 'audio/ogg' : 'audio/wav';
+
+                mediaElement.appendChild(source);
+
+                mediaElement.controls = true;
+                container.appendChild(mediaElement);
+                mediaElement.play();
+
+                progress.parentNode.removeChild(progress);
+                strong.parentNode.removeChild(strong);
+                hr.parentNode.removeChild(hr);
+            });
+        }
+
+        var record = document.getElementById('record');
+        var stop = document.getElementById('stop');
+        var deleteFiles = document.getElementById('delete');
+
+        var audio = document.querySelector('audio');
+	
+	var recordAudio = document.getElementById('record-audio');
+       // var recordVideo = document.getElementById('record-video');
+        var preview = document.getElementById('preview');
+
+        var container = document.getElementById('container');
+
+        // if you want to record only audio on chrome
+        // then simply set "isFirefox=true"
+	// changement 13/02/15
+	//var isFirefox = true;
+        var isFirefox = !!navigator.mozGetUserMedia;
+	
+	var verif = false;
+
+        var recordAudio, recordVideo;
+        record.onclick = function() {
+            record.disabled = true;
+            navigator.getUserMedia({
+                audio: true,
+		// supression du délenchement du périphérique vidéo
+                //video: true
+            }, function(stream) {
+                preview.src = window.URL.createObjectURL(stream);
+                preview.play();
+
+                // var legalBufferValues = [256, 512, 1024, 2048, 4096, 8192, 16384];
+                // sample-rates in at least the range 22050 to 96000.
+                recordAudio = RecordRTC(stream, {
+                    //bufferSize: 16384,
+                    //sampleRate: 45000,
+                       onAudioProcessStarted: function() {
+                        if (!isFirefox) {
+                            recordVideo.startRecording();
+                        }
+                    }
+                });
+
+                if (isFirefox) {
+                    recordAudio.startRecording();
+		    type: 'audio'
+		   
+                }
+
+                if (!isFirefox) {
+                    recordVideo = RecordRTC(stream, {
+                        type: 'video'
+                    });
+                    recordAudio.startRecording();
+
+                }
+
+                stop.disabled = false;
+            }, function(error) {
+                alert(JSON.stringify(error, null, '\t'));
+            });
+        };
+
+        var fileName;
+        stop.onclick = function() {
+			document.getElementById('form-cmd').style.visibility="visible"; 
+            record.disabled = false;
+            stop.disabled = true;
+
+            preview.src = '';
+	/* *******/
+	
+	            //fileName = Math.round(Math.random() * 99999999) + 99999999;
+		    fileName = 'oracle' + Math.round(Math.random() * 999999) + 1;
+
+            if (!isFirefox) {
+                recordAudio.stopRecording(function() {
+                    PostBlob(recordAudio.getBlob(), 'audio', fileName + '.wav');
+                });
+            }
+	   
+	   else {
+                recordAudio.stopRecording(function(url) {
+                    preview.src = url;
+                    PostBlob(recordAudio.getBlob(), 'audio', fileName + '.wav');
+                });
+            }
+	    
+            deleteFiles.disabled = false;
+        };
+
+        deleteFiles.onclick = function() {
+			document.getElementById('form-cmd').style.visibility="hidden";
+            deleteAudioVideoFiles();
+        };
+
+        function deleteAudioVideoFiles() {
+            deleteFiles.disabled = true;
+            if (!fileName) return;
+            var formData = new FormData();
+            formData.append('delete-file', fileName);
+            xhr('delete.php', formData, null, null, function(response) {
+                console.log(response);
+            });
+            fileName = null;
+            container.innerHTML = '';
+        }
+
+        function xhr(url, data, progress, percentage, callback) {
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function() {
+                if (request.readyState == 4 && request.status == 200) {
+                    callback(request.responseText);
+                }
+            };
+	
+		    if (url.indexOf('delete.php') == -1) {
+			request.upload.onloadstart = function() {
+			    percentage.innerHTML = 'Upload started...';
+			};
+
+			request.upload.onprogress = function(event) {
+			    progress.max = event.total;
+			    progress.value = event.loaded;
+			    percentage.innerHTML = 'Upload Progress ' + Math.round(event.loaded / event.total * 100) + "%";
+			};
+
+			request.upload.onload = function() {
+			    percentage.innerHTML = 'Saved!';
+			};
+		    }
+
+		    request.open('POST', url);
+		    request.send(data);
+		}
+	
+	// Fonction de validation de l'enregistrement
+	//~ function validate() {
+	//~ if (document.formSaisie.fileName != null ) {
+	//~ //if (document.formSaisie.record.disabled == true ) {
+		//~ return true;
+	//~ }
+	//~ // Si l'enregistrement n'a pas été fait :
+		//~ else {
+		//~ alert ('Tu dois faire un enregistrement !');
+			//~ return false;
+		//~ }
+	//~ };
+        </script>
+	
+<?php
+include('./views/page.footer.html');
+?>

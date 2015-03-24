@@ -1,0 +1,36 @@
+<?php
+$title = 'Game of Words';
+include('./views/page.header.html');
+?>
+<div id="main-container">
+	<div id="center-block">
+		<h2><?php echo $lang['select_mode']; ?></h2>
+		<ul id="modes" class="nav nav-tabs">
+<?php 
+	// Test de vérification de la langue de l'utilisateur. Si il n'apprend pas le français, il ne peux (pour l'instant) pas créer de carte aléatoire.
+	if ( $this->wronglang !== '0'  ) { ?>
+			<li type="button" class="btn btn-primary btn-lg btn-block" disabled="disabled">
+				<a href="?mode=oracle.card.alea" title="card_alea"><?php echo $lang['card_alea']; ?></a>
+			</li>
+<?php 
+	} else { 
+?>	
+			<li type="button" class="btn btn-primary btn-lg btn-block">
+				<a href="?mode=oracle.card.alea" title="card_alea"><?php echo $lang['card_alea']; ?></a>
+			</li>
+<?php 
+	} 
+?>
+			<li type="button" class="btn btn-primary btn-lg btn-block">
+				<a href="?mode=oracle.byid" title="card_byid"><?php echo $lang['card_by_id']; ?></a>
+			</li>
+			<li type="button" class="btn btn-primary btn-lg btn-block">
+				<a href="?mode=oracle.alea.exist" title="alea_exist"><?php echo $lang['card_exist']; ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<?php
+include('./views/page.footer.html');
+?>
+

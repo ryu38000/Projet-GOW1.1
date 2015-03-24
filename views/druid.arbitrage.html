@@ -1,0 +1,133 @@
+<?php
+$title = 'Arbitrage Druide';
+include('./views/page.header.html');
+?>
+<div id="main-container">
+	<div id="jrForm">
+	<form class="form-jr" role="form" id="creation.partie" method="post" action="./">
+
+				<?php if ( $this->errors ) { ?>
+				<fieldset class="errors">
+				<legend>Erreurs</legend>
+					<ul>
+					<?php foreach ( $this->errors as $error ) { ?>
+						<li>
+							<?php echo $error; ?>
+						</li>
+					<?php } ?>
+					</ul>
+				</fieldset>
+				<?php } ?>
+				<fieldset>
+					<legend class="form-jr-heading"><?php echo $lang['arbitrage']; ?></legend>
+					<dl>
+						<dt><label for="beware"><?php echo $lang['listen']; ?></label></dt>
+         
+						<?php echo "chemin_enregistrement: ".$this->raisin['cheminEnregistrement']."\n";?> <!-- à retirer après les tests-->
+						<dt><?php echo $lang['card_oracle'];?> : <?php echo $this->res2['username'].'</br>'; ?></dt>
+						<dt><?php echo $lang['card_level'];?> : <?php echo $this->raisin['nivcarte'].'</br>'; ?></dt>
+						
+					<!-- 	<script language="Javascript"> function bascule() </script> -->
+					</dl>
+			<!--	<div name="easy" id="easy" style="visibility: visible"> -->
+					<dl>
+						<dt><label for="mot"><?php echo $lang['word_to_find'];?></label> : <?php echo $this->res3['mot'].'</br>'; ?></dt>
+						<dt><input name="enregistrementID" type="HIDDEN" value="<?php echo $this->raisin['enregistrementID']; ?>"> 
+					</dl>
+			<!--		</div>
+					<div name="medium" id="medium" style="visibility: visible"> -->
+					<dl>
+						<dt><label for="tabou1"><?php echo $lang['taboo_1'];?></label> : <?php echo $this->res3['tabou1'].'</br>'; ?></dt>
+						<dt><label for="tabou2"><?php echo $lang['taboo_2'];?></label> : <?php echo $this->res3['tabou2']; ?></dt>
+					</dl>
+			<!--		</div>
+					<div name="hard" id="hard" style="visibility: visible">  -->
+					<dl>
+						<dt><label for="tabou3"><?php echo $lang['taboo_3'];?></label> : <?php echo $this->res3['tabou3'].'</br>'; ?></dt>
+						<dt><label for="tabou4"><?php echo $lang['taboo_4'];?></label> : <?php echo $this->res3['tabou4'].'</br>'; ?></dt>
+						<dt><label for="tabou5"><?php echo $lang['taboo_5'];?></label> : <?php echo $this->res3['tabou5'].'</br>'; ?></dt>
+					</dl>
+			<!--		</div> -->
+					<dl>
+						<!--<object type="application/x-shockwave-flash" data="./dewplayer.swf" width="200" height="20" id="dewplayer" name="dewplayer">
+							<param name="wmode" value="transparent" />
+							<param name="movie" value="dewplayer.swf" />
+							<param name="flashvars" value="mp3=<?php// echo $this->adresse; ?>&amp;showtime=true" />
+						</object> -->
+						<div class="inner" style="height: 5em;">
+						<audio id="audio" autoplay controls></audio> 
+						<button class="btn btn-primary"  type="button" id="start-audio">Commencer l'Ã©coute</button>
+						</div>
+
+					</dl>
+					<div id="form-cmd">
+						<input class="btn btn-lg btn-primary btn-block" type="submit" id="validate" name="validate" value="<?php echo $lang['validate']; ?>" />
+						<input class="btn btn-lg btn-primary btn-block" type="submit" id="invalidate" name="invalidate" value="<?php echo $lang['invalidate']; ?>" />
+						<input type="hidden" name="mode" value="<?php echo $this->mode; ?>"/>
+
+					</div>
+				</fieldset>
+			</form>
+</div>
+<div>
+
+</div>
+<script language="Javascript"> 
+
+		
+		// fonction de changement d'Ã©tat appelÃ©e par chacune des deux fonctions	
+		var niveau = $this->raisin['nivcarte'];
+		
+		function bascule(niveau)
+		{
+			
+			switch (niveau) 
+			{	
+				case 'easy':
+					document.getElementById('easy').style.visibility="visible"; 
+					document.getElementById('medium').style.visibility="hidden"; 
+					document.getElementById('hard').style.visibility="hidden";
+					break;
+					
+				case 'medium':
+					document.getElementById('easy').style.visibility="visible"; 
+					document.getElementById('medium').style.visibility="visible"; 
+					document.getElementById('hard').style.visibility="hidden";
+					break;
+						
+				case 'hard':
+					document.getElementById('easy').style.visibility="visible"; 
+					document.getElementById('medium').style.visibility="visible"; 
+					document.getElementById('hard').style.visibility="visible";
+					break;
+					
+			}
+					
+		}
+</script> 
+ <script>
+       // Module audio RTC
+       function getByID(id) {
+            return document.getElementById(id);
+        }
+        var startAudio = getByID('start-audio');
+        var audio = getByID('audio');
+        var audioConstraints = {
+            audio: true
+        };
+        </script>
+        <script>
+        var audioStream;
+        var start;
+        startAudio.onclick = function() {
+		audio.src = '<?php echo $this->adresse;?>';
+                audio.muted = false;
+                audio.play();
+                if (start) start.startPlay();
+            window.isAudio = true;
+            this.disabled = true;
+        };
+        </script>
+<?php
+include('./views/page.footer.html');
+?>

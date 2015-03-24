@@ -1,0 +1,125 @@
+<?php
+$title = 'Génération de carte oracle';
+include('./views/page.header.html');
+?>
+<div id="main-container">
+	<div id="creation.partie">
+		<div id="jrForm">
+			<form class="form-jr" role="form" id="creation.partie" method="post" action="./">
+
+				<?php if ( $this->errors ) { ?>
+				<fieldset class="errors">
+				<legend>Erreurs</legend>
+					<ul>
+					<?php foreach ( $this->errors as $error ) { ?>
+						<li>
+							<?php echo $error; ?>
+						</li>
+					<?php } ?>
+					</ul>
+				</fieldset>
+				<?php } ?>
+				<fieldset>
+					<legend class="form-jr-heading"><?php echo $lang['card_creation']; ?></legend>
+					
+					<dl>
+						<dt><label for="mot"><?php echo $lang['word_to_find']; ?></label></dt>
+						<dd><input type="text" id="mot" name="mot" required="required" readonly value="<?php echo $this->res['mot']; ?>" /></dd>
+						
+						<h3><span id="countdown" class="timer"></span></h3>
+						
+						</br><select id="nivcarte" name="nivcarte" >
+							<option value ="facile"><?php echo $lang['level_easy']; ?></option>
+							<option value ="moyen"><?php echo $lang['level_medium']; ?></option>
+							<option value ="difficile"><?php echo $lang['level_hard']; ?></option>
+						</br></select>
+						
+						</br><dt><label for="tabou1"><?php echo $lang['taboo_1']; ?></label></dt>
+						<dd><input type="text" id="tabou1" name="tabou1" required="required" readonly value="<?php echo $this->res['tabou1']; ?>" /></dd>
+						
+						</br><dt><label for="tabou2"><?php echo $lang['taboo_2']; ?></label></dt>
+						<dd><input type="text" id="tabou2" name="tabou2" required="required" readonly value="<?php echo $this->res['tabou2']; ?>" /></dd>
+						
+						</br><dt><label for="tabou3"><?php echo $lang['taboo_3']; ?></label></dt>
+						<dd><input type="text" id="tabou3" name="tabou3" required="required" readonly value="<?php echo $this->res['tabou3']; ?>" /></dd>
+						
+						</br><dt><label for="tabou4"><?php echo $lang['taboo_4']; ?></label></dt>
+						<dd><input type="text" id="tabou4" name="tabou4" required="required" readonly value="<?php echo $this->res['tabou4']; ?>" /></dd>
+						
+						</br><dt><label for="tabou5"><?php echo $lang['taboo_5']; ?></label></dt>
+						<dd><input type="text" id="tabou5" name="tabou5" required="required" readonly value="<?php echo $this->res['tabou5']; ?>" /></dd>
+
+					</dl>
+
+					<div id="form-cmd">
+						<input class="btn btn-primary" type="button" id="random" name="random" onclick="document.location.reload(false)" value="<?php echo $lang['random']; ?>"/><br/><br/>
+						
+						<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php echo $lang['validate']; ?>" class="submit_buttons" />
+						<input type="hidden" name="mode" value="<?php echo $this->mode; ?>"/>
+						<!-- Informations cachées pour l'enregistrement dans la BDD  
+						<input type="hidden" name="userlang" value="<?php// echo $this->userlang; ?>"/>
+						<input type="hidden" name="userid" value="<?php// echo $this->userid; ?>"/>
+						<input type="hidden" name="niveau" value="<?php// echo $this->niveau; ?>"/> -->
+					</div>
+				</fieldset>
+			</form>
+		</div> <!-- fin jrForm  -->
+	</div>
+</div>
+<script>
+// Timer
+var seconds = 20;
+function secondPassed() {
+    var minutes = Math.round((seconds - 30)/60);
+    var remainingSeconds = seconds % 60;
+    if (remainingSeconds < 10) {
+        remainingSeconds = "0" + remainingSeconds;  
+    }
+    document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
+    if (seconds == 0) {
+        clearInterval(countdownTimer);
+	document.location.href="index.php?mode=oracle.timeout.card"
+        document.getElementById('countdown').innerHTML = "Buzz Buzz";
+    } else {
+        seconds--;
+    }
+}
+var countdownTimer = setInterval('secondPassed()', 1000);
+</script>
+<script language="Javascript"> 
+		// fonction pour n'afficher que les champs de 3 mots tabous (facile)
+			function basculef(elem) 
+			{ 
+				document.getElementById('facile').style.visibility="visible"; 
+				document.getElementById('moyen').style.visibility="hidden"; 
+				document.getElementById('difficile').style.visibility="hidden"; 
+				document.getElementById('tabou4').value="";
+				document.getElementById('tabou5').value="";
+				document.getElementById('tabou4').required="";
+				document.getElementById('tabou5').required="";
+			} 
+			
+		// fonction pour n'afficher que les champs de 4 mots tabous (facile+moyen)
+			function basculem(elem) 
+			{ 
+				document.getElementById('facile').style.visibility="visible"; 
+				document.getElementById('moyen').style.visibility="visible"; 
+				document.getElementById('difficile').style.visibility="hidden"; 
+				document.getElementById('tabou5').value="";
+				document.getElementById('tabou4').required="required";
+				document.getElementById('tabou5').required="";
+			}
+			
+		// fonction pour afficher les champs de 5 mots tabous (facile+moyen+difficile)
+			function basculed(elem) 
+			{ 
+				document.getElementById('facile').style.visibility="visible"; 
+				document.getElementById('moyen').style.visibility="visible"; 
+				document.getElementById('difficile').style.visibility="visible"; 
+				document.getElementById('tabou4').required="required";
+				document.getElementById('tabou5').required="required";
+			}
+</script> 
+<?php
+include('./views/page.footer.html');
+?>

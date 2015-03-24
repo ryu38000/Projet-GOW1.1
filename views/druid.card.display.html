@@ -1,0 +1,54 @@
+<?php
+$title = 'Druid Card';
+include('./views/page.header.html');
+?>
+<div id="main-container">
+	<div id="jrForm">
+	<form class="form-jr" role="form" id="display.card" method="post" action="./index.php">
+
+				<?php if ( $this->errors ) { ?>
+				<fieldset class="errors">
+				<legend>Erreurs</legend>
+					<ul>
+
+					<?php foreach ( $this->errors as $error ) { ?>
+						<li>
+							<?php echo $error; ?>
+						</li>
+					<?php } ?>
+				</ul>
+				</fieldset>
+				<?php } ?>
+				<fieldset>
+					<legend class="form-jr-heading"><?php echo $lang['card_preview']; ?></legend>
+					<dl>
+						<dt><label for="consigne"><?php echo $lang['id_describe'];?></label></dt>
+						<dt><label for="idcarte"><?php echo "ID ";?></label> : <?php echo $this->res['carteID'].'</br>'; ?></dt>
+					</dl>
+					<dl>
+						
+						<dt><label for="mot"><?php echo $lang['word_to_find'];?></label> : <?php echo $this->res['mot'].'</br>'; ?></dt>
+						<dt><label for="tabou1"><?php echo $lang['taboo_1'];?></label> : <?php echo $this->res['tabou1'].'</br>'; ?></dt>
+						<dt><label for="tabou2"><?php echo $lang['taboo_2'];?></label> : <?php echo $this->res['tabou2'].'</br>'; ?></dt>
+						<dt><label for="tabou3"><?php echo $lang['taboo_3'];?></label> : <?php echo $this->res['tabou3'].'</br>'; ?></dt>
+						<dt><label for="tabou4"><?php echo $lang['taboo_4'];?></label> : <?php echo $this->res['tabou4'].'</br>'; ?></dt>
+						<dt><label for="tabou5"><?php echo $lang['taboo_5'];?></label> : <?php echo $this->res['tabou5'].'</br>'; ?></dt>
+					</dl>
+					<dl>
+							<dt><label ><?php echo $lang['well_done'];?></label><dt>
+							<dt><label ><?php echo $lang['points'];?></label><dt>
+							
+					</dl>
+					<div id="form-cmd">
+						<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php echo $lang['return']; ?>" class="submit_buttons" />
+					</div>
+				</fieldset>
+			</form>
+	</div>
+<!--
+	ici rajouter un message d'erreur quand aucune carte n'existe dans la langue de l'utilisateur
+-->
+</div>
+<?php
+include('./views/page.footer.html');
+?>

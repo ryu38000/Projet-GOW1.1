@@ -1,0 +1,157 @@
+<?php
+$title = 'Devin';
+include('./views/page.header.html');
+?>
+<div id="main-container">
+	<div id="jrForm">
+		<div class="form-jr">
+				 <?php if ( $this->errors ) { ?>
+				<fieldset class="errors">
+				<legend>Erreurs</legend>
+					<ul>
+					<?php foreach ( $this->errors as $error ) { ?>
+						<li>
+							<?php echo $error; ?>
+						</li>
+					<?php } ?>
+					</ul>
+				</fieldset>  
+				<?php }			 
+				 if( $this->getcarteValide() ){
+				 ?> 
+				<fieldset>
+					<legend class="form-jr-heading"><?php echo $lang['listen_diviner']; ?></legend>
+					<dl>
+						<dl>
+							<dt><label for="carteID"><?php echo $lang['id_card'];?></label> : <?php echo  $this->raisin['carteID'].'</br>'; ?></dt>
+							<dt><label for="createur"><?php echo $lang['card_creator'];?></label> : <?php echo $this->res4['username'].'</br>'; ?></dt>
+							<dt><label for="oracle"><?php echo $lang['card_oracle'];?></label> : <?php echo $this->res2['username'].'</br>'; ?></dt>						
+						</dl>
+						<h3><?php echo $lang['which_word'];?> </h3>
+						<div class="inner" style="height: 5em;">
+						<audio id="audio" autoplay controls></audio> 
+						<button class="btn btn-primary"  type="button" id="start-audio">Commencer l'écoute</button>
+						</div>
+						<h3><span id="countdown" class="timer"></span></h3>
+					</dl>
+					<dl>
+						<dt><label for="mot"><?php echo $lang['guess'];?></label></dt>
+						<dd><input type="text" id="mot" name="mot" value="<?php echo htmlspecialchars($this->motadeviner); ?>" /></dd>
+					</dl>
+					<div id="form-cmd">
+					<!--	<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php// echo $lang['validate']; ?>" class="submit_buttons" /> -->
+						<input class="btn btn-lg btn-primary btn-block" type="button" id="valide" onclick="validate()" value="<?php echo $lang['validate']; ?>" />
+						<input type="hidden" name="mode" value="<?php echo $this->mode; ?>"/> 
+						<input type="hidden" id='motadeviner' value="<?php echo $this->res3['mot']; ?>"/>
+					</div>
+				</fieldset>
+				<?php } else{   echo "aucune partie disponible pour l'instant.";
+
+} ?>
+			</div>
+	</div>
+</div>
+</div>
+<script type="text/javascript">
+// Résultats 
+	// Si le devin donne la bonne réponse
+	function validate() {
+		
+		var motadeviner=document.getElementById('motadeviner').value;
+		var motentre=document.getElementById('mot').value;
+		//fonction qui rend insensible à la casse et enlève les espaces en trop
+		var motentre=(motentre.replace(/\s{2,}/g, ' ').trim().toLowerCase());
+		var motadeviner=(motadeviner.replace(/\s{2,}/g, ' ').trim().toLowerCase());
+		
+		/* alert("'mot entré "+motentre+"'");
+		 alert("'mot à trouver "+motadeviner+"'")*/;
+		
+	//if (document.getElementById('motadeviner').value == document.getElementById('mot').value ) {
+	if (motentre == motadeviner) {
+				document.location.href="index.php?mode=diviner.result"
+			
+			}
+	// Si le devin donne une réponse fausse, on vide la zone de texte 
+		else {
+			document.getElementById('mot').value = '' ;
+		}
+	}
+	
+//test keypress
+$(document).keypress(function(e) {
+    if(e.which == 13) {
+	validate();
+    }
+});
+
+// Timer
+var seconds = 60;
+function secondPassed() {
+    var minutes = Math.round((seconds - 30)/60);
+    var remainingSeconds = seconds % 60;
+    if (remainingSeconds < 10) {
+        remainingSeconds = "0" + remainingSeconds;  
+    }
+    document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
+    if (seconds == 0) {
+        clearInterval(countdownTimer);
+	document.location.href="index.php?mode=diviner.timeout"
+        document.getElementById('countdown').innerHTML = "Buzz Buzz";
+    } else {
+        seconds--;
+    }
+}
+var countdownTimer = setInterval('secondPassed()', 1000);
+</script>
+  <script>
+       // Module audio RTC
+       function getByID(id) {
+            return document.getElementById(id);
+        }
+        var startAudio = getByID('start-audio');
+        var audio = getByID('audio');
+        var audioConstraints = {
+            audio: true
+        };
+        </script>
+        <script>
+        var audioStream;
+        var start;
+        startAudio.onclick = function() {
+		audio.src = '<?php echo $this->adresse;?>';
+                audio.muted = false;
+                audio.play();
+                if (start) start.startPlay();
+            window.isAudio = true;
+            this.disabled = true;
+            
+            
+        };
+        </script>
+<script>
+	//Récupération de l'identifiant  pour insertion dans la table partie  Essai
+	/*var enrID = $("#enrID").attr("data-enrID");
+	
+            // POST the Blob using XHR2
+	    xhr('controllers/diviner.result.class.php?enrID="'+enrID+'"', function(fileURL) {
+
+                var source = document.createElement('source');
+                var href = location.href.substr(0, location.href.lastIndexOf('/') + 1);
+                source.src = href + fileURL;
+            });
+	    
+	      function xhr(url, data, callback) {
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function() {
+                if (request.readyState == 4 && request.status == 200) {
+                    callback(request.responseText);
+                }
+            };
+	       request.open('POST', url);
+		    request.send(data);
+		} */
+	</script> 
+
+<?php
+include('./views/page.footer.html');
+?>

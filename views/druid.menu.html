@@ -1,0 +1,21 @@
+<?php
+$title = 'Game of Words';
+include('./views/page.header.html');
+?>
+<div id="main-container">
+	<div id="center-block">
+		<h2><?php echo $lang['select_mode']; ?></h2>
+		<ul id="modes" class="nav nav-tabs">
+			<li type="button" class="btn btn-primary btn-lg btn-block" >
+				<a href="?mode=druid.card" title="card_create"><?php echo $lang['card_create']; ?></a>
+			</li>
+			<li type="button" class="btn btn-primary btn-lg btn-block">
+				<a href="?mode=druid.arbitrage" title="druid_arbitrage"><?php echo $lang['arbitrage']; ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<?php
+include('./views/page.footer.html');
+?>
+

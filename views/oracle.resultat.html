@@ -1,0 +1,36 @@
+  <?php
+$title = 'Oracle Resultat';
+include('./views/page.header.html');
+?>
+<div id="main-container">
+	<div id="jrForm">
+	<form class="form-jr" role="form" id="creation.partie" method="post" action="./index.php">
+		<?php if ( $this->errors ) { ?>
+				<fieldset class="errors">
+				<legend>Erreurs</legend>
+					<ul>
+					<?php foreach ( $this->errors as $error ) { ?>
+						<li>
+							<?php echo $error; ?>
+						</li>
+					<?php } ?>
+					</ul>
+				</fieldset>
+				<?php } ?>
+				<!--<fieldset>-->
+					<legend class="form-jr-heading"><?php echo $lang['result']; ?></legend>
+					<dl>
+						<h2><?php echo $lang['well_done'].'</br>'; ?></h2>
+						<dt><?php echo $lang['points'].'</br>'; ?></dt>
+					</dl>
+					<div id="form-cmd">
+						<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php echo $lang['return']; ?>" class="submit_buttons" />
+						<!--<input type="hidden" name="mode" value="<?php //echo $this->mode; ?>"/> -->
+
+					</div>
+				<!--</fieldset>-->
+			</form>
+</div>
+<?php
+include('./views/page.footer.html');
+?>

@@ -1,0 +1,70 @@
+<?php
+include('./languages/language.php');
+//header('Content-Type: text/html; charset=UTF-8');
+?><!DOCTYPE html>
+<html>
+    <head>
+        <title><?php echo $title; ?></title>
+        <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+
+		<script type="text/javascript" src="style/default.js/js/jquery-1.11.2.min.js"></script>
+		
+		<!-- Adaptation au Bootstrap -->
+		<link rel="stylesheet" type="text/css" href="style/default.css/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="style/default.css/css/bootstrap-theme.css">
+		
+		<script src="style/default.js/js/bootstrap.min.js"></script>
+		
+		<link href="http://fonts.googleapis.com/css?family=Playball" rel="stylesheet" type="text/css">
+		<link rel="icon" href="style/default.css/imgs/favicon.ico" />
+
+		<script type="text/javascript" src="./style/default.js/countdown/jquery.countdown.js"></script>
+		
+		<!--Module de son : -->
+		    <script src="style/default.js/RecordRTC.js"></script>
+		    
+		<!--Overlay Oracle :-->
+		<!-- load the jQuery library -->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+		<!-- ALL jQuery Tools. No jQuery library -->
+		<script src="http://cdn.jquerytools.org/1.2.5/all/jquery.tools.min.js"></script>
+		    
+    </head>
+    <body>
+        <div id="header-logo"></div>
+		<div class="navbar navbar-inverse" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+					<a class="navbar-brand" href="index.php">Game of Words</a>
+				</div>
+			<div class="collapse navbar-collapse style="height: 1px;" ">
+				<ul class="nav navbar-nav">
+<?php 
+	if ( $GLOBALS['userlogged'] ) { ?>
+
+			<li><a  class="active" href="?mode=infos" title="rules"><?php echo $lang['rules']; ?></a></li>
+			<li><a href="?mode=profile" title="<?php echo htmlspecialchars($GLOBALS['user']->username); ?>"><?php echo $lang['menu_profile']; ?></a></li>
+			<li><a href="?mode=score" title="score"><?php echo $lang['scores']; ?></a></li>
+			<li><a href="?mode=logout" title="logout"><?php echo $lang['logout']; ?></a></li>
+<?php 
+	} else { 
+?>
+			<li ><a href="?mode=login" title="login">Se connecter</a></li>
+			<li ><a href="?mode=register" title="register">S'enregister</a></li>
+<?php 
+	} 
+?>
+				</ul>	
+			</div>
+		</div>
+</div>
+	<div class="container">

@@ -1,0 +1,38 @@
+<?php
+$title = 'Game of Words';
+include('./views/page.header.html');
+
+?>
+<div id="main-container">
+
+	<div id="center-block">
+		<h1><?php echo $lang['home_welcome']." "; ?><?php echo htmlspecialchars($GLOBALS['user']->username); ?>!</h1><br/>
+		<h2><?php echo $lang['learning'];?></h2>
+		<ul id="modes" class="nav nav-tabs">
+			<li type="button" class="btn btn-primary btn-lg btn-block" >
+				
+				<a href="?mode=oracle.menu" title="oracle"><?php echo $lang['oracle'];?></a>
+			</li>
+			<li type="button" class="btn btn-primary btn-lg btn-block">
+				<a href="?mode=druid.game" title="druid"><?php echo $lang['druide'];?></a>
+			</li>
+			<li type="button" class="btn btn-primary btn-lg btn-block">
+				<a href="?mode=diviner.game" title="diviner"><?php echo $lang['devin'];?></a>
+			
+			</li>
+		</ul><br/>
+		<img src="style/default.css/imgs/druidelogo.png" class="img-responsive" alt="Responsive image" align="center" />
+	</div>
+</div>
+
+<script type="text/javascript">
+
+function getOnlineMembers(){
+	var li = $('<a class="select-members" />');
+	li.html('membre');
+	li.appendTo('li#battle-select');
+}
+</script>
+<?php
+include('./views/page.footer.html');
+?>
