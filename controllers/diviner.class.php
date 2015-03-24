@@ -90,7 +90,7 @@ class diviner_game
 			}		
 		}
 			echo "KFC";
-	}
+	}//on va les ajouter dans la table sanctionCarte 
 
 	private function selectpartie()
 	{
