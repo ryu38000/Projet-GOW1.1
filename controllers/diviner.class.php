@@ -21,6 +21,7 @@ class diviner_game
 	private $result= '';
 	private $sanction ='';
 	private $score='';
+	private $pointsSanction = 5;
 
 
 	private $carteValide = false;
@@ -75,24 +76,25 @@ class diviner_game
                                 FROM sanctionCarte
                                 WHERE idDevin ='".$this->diviner."' AND enregistrementID='".$this->sanction['enregistrementID']."'";
                         $res = $db->query($sql);
-                        $this->existSanction = mysqli_num_rows()($res);
-			if($this->existSanction != 0){
+                        $this->existSanction = mysqli_num_rows($res);
+			if($this->existSanction == 0){
 
 //Ajout de la carte sanctionné dans la BDD
 				$sql = "INSERT INTO sanctionCarte
                                         (idDevin,enregistrementID)
-					VALUES ($this->diviner,$this->sanction['enregistrementID'])
+					VALUES (".$this->diviner.",".$this->sanction['enregistrementID'].")";
                                if( $res = $db->query($sql)){
-				$sql = "SELECT scoreDevin
+				$sql = "SELECT scoreDevin, scoreGlobal
 					FROM score
 					WHERE userid ='".$this->diviner."'";
 				$res = $db->query($sql);
 				$this->score = mysqli_fetch_assoc($res);  
 			
 				if ($this->score['scoreDevin'] >= 5){
-					$this->score['scoreDevin']-=5;
+					$this->score['scoreDevin']-=$this->getpointsSanction();
+					$this->score['scoreGlobal']-=$this->getpointsSanction();
 					$sql='UPDATE score 
-						SET scoreDevin="'.$this->score['scoreDevin'].'"
+						SET scoreDevin="'.$this->score['scoreDevin'].'" AND scoreGlobal ="'.$this->score['scoreGlobal'].'"
 						WHERE userid="'.$this->diviner.'"';
 					$res=$db->query($sql);
 	
@@ -216,6 +218,11 @@ class diviner_game
 	public function getcarteValide(){
 		return $this->carteValide;
 	}
+
+        public function getpointsSanction(){
+                return $this->pointsSanction;
+        }
+
 
 }
 
