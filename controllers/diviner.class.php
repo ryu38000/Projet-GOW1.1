@@ -12,6 +12,7 @@ class diviner_game
 	private $userlang = '';
 	private $user= '';
 	private $diviner= '';
+	private $lang = array();
 	
 	private $raisin ='';
 	private $res2 = '';
@@ -21,7 +22,7 @@ class diviner_game
 	private $result= '';
 	private $sanction ='';
 	private $score='';
-
+	
 
 	private $carteValide = false;
 	
@@ -29,6 +30,7 @@ class diviner_game
 	private $reussie = 'en cours';
 	private $temps='';
 	private $mess='';
+
 
 	public function set_mode($mode)
 	{
@@ -90,7 +92,7 @@ class diviner_game
 				$res = $db->query($sql);
 				$this->score = mysqli_fetch_assoc($res);  
 			
-				if ($this->score['scoreDevin'] >= 5){
+				if ($this->score['scoreDevin'] >= 5) { #à modifier avec un fichier config
 					$this->pointsSanction=5;
 
 					$this->score['scoreDevin']-=5;
@@ -100,13 +102,11 @@ class diviner_game
 						SET scoreDevin="'.$this->score['scoreDevin'].'", scoreGlobal ="'.$this->score['scoreGlobal'].'"
 						WHERE userid="'.$this->diviner.'"';
 					$res=$db->query($sql);
-	
-					$mess =  "Il semblerait que vous avez subitement quitté la partie précédente! Il n'y a pas de place pour la triche ici!! Vous êtes donc sanctionné de 5 points.";
-					$this->setmess($mess);
+					array_push($this->lang,"sanction");
 					}
 				else{
-					$mess =  "Il semblerait que vous avez subitement quitté la partie précédente! Il n'y a pas de place pour la triche ici!! Vous n'avez pas de points. Mais GARE A VOUS la prochaine fois, vous perdrez 5 points ;).";
-					$this->setmess($mess);
+					 array_push($this->lang,"sanction_without_points");
+
 				}
 		      	      }
 			}
@@ -224,13 +224,13 @@ class diviner_game
 		return $this->carteValide;
 	}
 	
-        public function getmess(){
-                return $this->mess;
-        }
+//        public function getmess(){
+  //              return $this->mess;
+    //    }
 
-	public function setmess($mess){
-               $this->mess=$mess;
-        }
+//	public function setmess($mess){
+//		$this->mess = $lang[$mess];
+  //      }
 
 }
 

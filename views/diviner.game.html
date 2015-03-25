@@ -16,15 +16,16 @@ include('./views/page.header.html');
 					</ul>
 				</fieldset>  
 				<?php }
-				$this->message = $this->getmess();
+			
 		
-				if($this->message !=""){
+				if($this->lang){
+					 foreach ( $this->lang as $mess ) { 
   				?> 
 				<script type="text/javascript">
-					 var mess = "<?php echo $this->message; ?>" ;
+					 var mess = "<?php echo $lang[$mess]; ?>" ;
 					 alert (mess);
 				 </script>
-				<?php }	
+				<?php }	}
 				 if( $this->getcarteValide() ){
 				 ?> 
 				<fieldset>
@@ -53,7 +54,7 @@ include('./views/page.header.html');
 						<input type="hidden" id='motadeviner' value="<?php echo $this->res3['mot']; ?>"/>
 					</div>
 				</fieldset>
-				<?php } else{   echo "aucune partie disponible pour l'instant.";
+				<?php } else{   echo $lang['NoGame'];
 
 } ?>
 			</div>

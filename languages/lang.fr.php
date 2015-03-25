@@ -124,5 +124,11 @@ $lang['diviner_timeout'] = 'Tu n\'as pas fourni de réponse dans le temps impart
 $lang['oracle_timeout'] = 'Tu n\'as pas fourni de description dans le temps imparti';
 $lang['oracle_card_timeout'] = 'Tu n\'as pas choisi de carte dans le temps imparti';
 
+//Triche 
+$lang['sanction'] = 'Il semblerait que vous avez subitement quitté la précédente partie. Par conséquent, vous serez sanctionné de 5 points...';
+$lang['sanction_without_points'] = 'Il semblerait que vous ayez subitement quitté la partie précédente. Néanmoins vous n\'avez pas de point pour le moment, vous ne serez donc pas sanctionné! Mais gare à vous la prochaine fois ;)';
+
+//Pas de partie jouable
+$lang['NoGame']='aucune partie disponible pour l\'instant.';
 
 ?>
