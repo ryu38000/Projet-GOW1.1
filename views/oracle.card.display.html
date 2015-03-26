@@ -38,12 +38,8 @@ include('./views/page.header.html');
 							<dt><label for="beware"><?php echo $lang['beware_time']; ?></label></dt>
 						</dl>
 						<dl>
-							<dt><label for="mot"><?php echo $lang['word_to_find'];?></label> : <?php echo $this->res['mot'].'</br>'; ?></dt>
-							<dt><label for="tabou1"><?php echo $lang['taboo_1'];?></label> : <?php echo $this->res['tabou1'].'</br>'; ?></dt>
-							<dt><label for="tabou2"><?php echo $lang['taboo_2'];?></label> : <?php echo $this->res['tabou2'].'</br>'; ?></dt>
-							<dt><label for="tabou3"><?php echo $lang['taboo_3'];?></label> : <?php echo $this->res['tabou3'].'</br>'; ?></dt>
-							<dt><label for="tabou4"><?php echo $lang['taboo_4'];?></label> : <?php echo $this->res['tabou4'].'</br>'; ?></dt>
-							<dt><label for="tabou5"><?php echo $lang['taboo_5'];?></label> : <?php echo $this->res['tabou5'].'</br>'; ?></dt>
+							<div id='card' >
+							</div>
 						</dl>
 						<h3><span id="countdown" class="timer"></span></h3>
 						<dl>
@@ -67,41 +63,10 @@ include('./views/page.header.html');
 		</div>
 	</div>
 </div>
+
 <!--
 	ici rajouter un message d'erreur quand aucune carte n'existe dans la langue de l'utilisateur
 -->
-<script language="JavaScript" type="text/javascript">
-// Script pour le PopUp  l'ouverture de la page , prévenir l'utilisateur de couper le son
-$(document).ready(function() {
-// select the overlay element - and "make it an overlay"
-$("#facebox").overlay({
-
-// some mask tweaks suitable for facebox-looking dialogs
-mask: {
-// you might also consider a "transparent" color for the mask
-color: '#000000',
-// load mask a little faster
-loadSpeed: 1000,
-// very transparent
-opacity: 0.7
-},
-// disable this for modal dialog-type of overlays
-closeOnClick: true,
-// we want to use the programming API
-api: true
-
-// load it after delay
-})
-var ol = $("#facebox").overlay({api: true});
-// wait 20 seconds, then load the overlay
-setTimeout(function() {
-ol.load();
-}, 0);
-setTimeout(function() {
-ol.close();
-}, 10000);
-});
-</script>
 
 <script>
 // Timer
@@ -122,68 +87,33 @@ function secondPassed() {
         seconds--;
     }
 }
-var countdownTimer = setInterval('secondPassed()', 1000);
+// au moment de l'appel à la méthode getUserMedia
 
-//fin timer
-</script>
+navigator.getUserMedia({
 
-<script>
+    audio: true,
 
-// Enregistrement d'un fichiers audio .wav sur le serveur
+},
 
-        // PostBlob method uses XHR2 and FormData to submit 
-        // recorded blob to the PHP server
-        function PostBlob(blob, fileType, fileName) {
-            // FormData
-            var formData = new FormData();
-            formData.append(fileType + '-filename', fileName);
-            formData.append(fileType + '-blob', blob);
+function(stream) {
 
-            // progress-bar
-            var hr = document.createElement('hr');
-            container.appendChild(hr);
-            var strong = document.createElement('strong');
-            strong.id = 'percentage';
-            strong.innerHTML = fileType + ' oracleupload progress: ';
-            container.appendChild(strong);
-            var progress = document.createElement('progress');
-            container.appendChild(progress); 
+    if (stream.getAudioTracks().length === 0) {
 
+            console.log('you have no webcam nore mic available on your device');
 
-	//Récupération des identifiants pour insertion dans la table enregistrement
-	var userid = $("#userid").attr("data-userid");
-	var userlang = $("#userlang").attr("data-userlang");
-	var cardid = $("#cardid").attr("data-cardid");
-	var levelcard = $("#levelcard").attr("data-levelcard");
+    }
 
-            // POST the Blob using XHR2
-	    xhr('save.php?userid="'+userid+'"&userlang="'+userlang+'"&cardid="'+cardid+'"&levelcard="'+levelcard+'"', formData, progress, percentage, function(fileURL) {
-                container.appendChild(document.createElement('hr'));
-		
-                var mediaElement = document.createElement(fileType);
+    else {
 
-                var source = document.createElement('source');
-                var href = location.href.substr(0, location.href.lastIndexOf('/') + 1);
-                source.src = href + fileURL;
-
-               // if (fileType == 'video') source.type = 'video/webm; codecs="vp8, vorbis"';
-	       if (fileType == 'audio') source.type = 'audio/mp3';
-		//if (fileType == 'audio') source.type = 'audio/wav';
-               //if (fileType == 'audio') source.type = !!navigator.mozGetUserMedia ? 'audio/ogg' : 'audio/wav';
-
-                mediaElement.appendChild(source);
-
-                mediaElement.controls = true;
-                container.appendChild(mediaElement);
-                mediaElement.play();
-
-                progress.parentNode.removeChild(progress);
-                strong.parentNode.removeChild(strong);
-                hr.parentNode.removeChild(hr);
-            });
-        }
-
-        var record = document.getElementById('record');
+        // continuer les actions
+		document.getElementById('card').innerHTML = "	<dt><label for='mot'><?php echo $lang['word_to_find'];?></label> : <?php echo $this->res['mot'].'</br>'; ?></dt>"+
+								"<dt><label for='tabou1'><?php echo $lang['taboo_1'];?></label> : <?php echo $this->res['tabou1'].'</br>'; ?></dt>"+
+								"<dt><label for='tabou2'><?php echo $lang['taboo_2'];?></label> : <?php echo $this->res['tabou2'].'</br>'; ?></dt>"+
+								"<dt><label for='tabou3'><?php echo $lang['taboo_3'];?></label> : <?php echo $this->res['tabou3'].'</br>'; ?></dt>"+
+								"<dt><label for='tabou4'><?php echo $lang['taboo_4'];?></label> : <?php echo $this->res['tabou4'].'</br>'; ?></dt>"+
+								"<dt><label for='tabou5'><?php echo $lang['taboo_5'];?></label> : <?php echo $this->res['tabou5'].'</br>'; ?></dt>";
+        //var countdownTimer = setInterval('secondPassed()', 1000);
+                var record = document.getElementById('record');
         var stop = document.getElementById('stop');
         var deleteFiles = document.getElementById('delete');
 
@@ -205,6 +135,7 @@ var countdownTimer = setInterval('secondPassed()', 1000);
 
         var recordAudio, recordVideo;
         record.onclick = function() {
+	    var countdownTimer = setInterval('secondPassed()', 1000);	
             record.disabled = true;
             navigator.getUserMedia({
                 audio: true,
@@ -213,6 +144,7 @@ var countdownTimer = setInterval('secondPassed()', 1000);
             }, function(stream) {
                 preview.src = window.URL.createObjectURL(stream);
                 preview.play();
+		
 
                 // var legalBufferValues = [256, 512, 1024, 2048, 4096, 8192, 16384];
                 // sample-rates in at least the range 22050 to 96000.
@@ -290,6 +222,109 @@ var countdownTimer = setInterval('secondPassed()', 1000);
             fileName = null;
             container.innerHTML = '';
         }
+
+    }
+
+},
+
+function(error){
+ // Script pour le PopUp  l'ouverture de la page , prévenir l'utilisateur de couper le son
+$(document).ready(function() {
+// select the overlay element - and "make it an overlay"
+$("#facebox").overlay({
+
+// some mask tweaks suitable for facebox-looking dialogs
+mask: {
+// you might also consider a "transparent" color for the mask
+color: '#000000',
+// load mask a little faster
+loadSpeed: 1000,
+// very transparent
+opacity: 0.7
+},
+// disable this for modal dialog-type of overlays
+closeOnClick: true,
+// we want to use the programming API
+api: true
+
+// load it after delay
+})
+var ol = $("#facebox").overlay({api: true});
+// wait 20 seconds, then load the overlay
+setTimeout(function() {
+ol.load();
+}, 0);
+setTimeout(function() {
+ol.close();
+}, 10000);
+}); 
+
+<!-- alert(error); -->    
+
+    
+
+});
+
+//fin timer
+</script>
+
+<script>
+
+// Enregistrement d'un fichiers audio .wav sur le serveur
+
+        // PostBlob method uses XHR2 and FormData to submit 
+        // recorded blob to the PHP server
+        function PostBlob(blob, fileType, fileName) {
+            // FormData
+            var formData = new FormData();
+            formData.append(fileType + '-filename', fileName);
+            formData.append(fileType + '-blob', blob);
+
+            // progress-bar
+            var hr = document.createElement('hr');
+            container.appendChild(hr);
+            var strong = document.createElement('strong');
+            strong.id = 'percentage';
+            strong.innerHTML = fileType + ' oracleupload progress: ';
+            container.appendChild(strong);
+            var progress = document.createElement('progress');
+            container.appendChild(progress); 
+
+
+	//Récupération des identifiants pour insertion dans la table enregistrement
+	var userid = $("#userid").attr("data-userid");
+	var userlang = $("#userlang").attr("data-userlang");
+	var cardid = $("#cardid").attr("data-cardid");
+	var levelcard = $("#levelcard").attr("data-levelcard");
+
+            // POST the Blob using XHR2
+	    xhr('save.php?userid="'+userid+'"&userlang="'+userlang+'"&cardid="'+cardid+'"&levelcard="'+levelcard+'"', formData, progress, percentage, function(fileURL) {
+                container.appendChild(document.createElement('hr'));
+		
+                var mediaElement = document.createElement(fileType);
+
+                var source = document.createElement('source');
+                var href = location.href.substr(0, location.href.lastIndexOf('/') + 1);
+                source.src = href + fileURL;
+
+               // if (fileType == 'video') source.type = 'video/webm; codecs="vp8, vorbis"';
+	       if (fileType == 'audio') source.type = 'audio/mp3';
+		//if (fileType == 'audio') source.type = 'audio/wav';
+               //if (fileType == 'audio') source.type = !!navigator.mozGetUserMedia ? 'audio/ogg' : 'audio/wav';
+
+                mediaElement.appendChild(source);
+
+                mediaElement.controls = true;
+                container.appendChild(mediaElement);
+                mediaElement.play();
+
+                progress.parentNode.removeChild(progress);
+                strong.parentNode.removeChild(strong);
+                hr.parentNode.removeChild(hr);
+            });
+        }
+
+
 
         function xhr(url, data, progress, percentage, callback) {
             var request = new XMLHttpRequest();
