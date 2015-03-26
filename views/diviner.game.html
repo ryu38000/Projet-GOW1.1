@@ -119,6 +119,13 @@ var countdownTimer = setInterval('secondPassed()', 1000);
         }
         var startAudio = getByID('start-audio');
         var audio = getByID('audio');
+
+	// commandes pour limiter l'écoute d'un enregistrement
+	// la premiere empeche de mettre en pause en relancant la lecture quand on appuie sur le bouton pause
+	audio.addEventListener("pause",function(first){audio.play();},true);
+	// la seconde empeche de relire un fichier quand on arrive à la fin en réinitialisant la source du fichier à lire
+	audio.addEventListener("ended",function(first){audio.src = '';});
+
         var audioConstraints = {
             audio: true
         };
