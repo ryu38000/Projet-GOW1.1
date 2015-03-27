@@ -7,7 +7,7 @@ include('./views/page.header.html');
 	<div class="content">
 		<div style="padding:5px;">
 		<h2><?php echo $lang['warning']; ?></h2><br/><h3><?php echo $lang['cut_sound']; ?></h3> 
-		<button class="close" style="cursor: pointer; background:#000; color:white; text-align:center; font-weight:bold; position:absolute; bottom:20%; left:50%; padding:0 2px; width:200px; height:30px; line-height:20px">OK</button>
+		<button class="close" onclick="menu()" style="cursor: pointer; background:#000; color:white; text-align:center; font-weight:bold; position:absolute; bottom:20%; left:50%; padding:0 2px; width:200px; height:30px; line-height:20px">OK</button>
 		<div class="resume">&nbsp;</div>
 		</div>
 	</div>
@@ -19,7 +19,7 @@ include('./views/page.header.html');
 	<div id="cardid" data-cardid="<?php echo $this->res['carteID']; ?>" style="display:none"></div>
 	<div id="levelcard" data-levelcard="<?php echo $this->res['nivcarte']; ?>" style="display:none"></div>
 	<div id="jrForm">
-		<form class="form-jr" role="form" id="description.carte" name="formSaisie" onsubmit="return validate()" method="post" action="./index.php?mode=oracle.result">   
+		<form class="form-jr" role="form" id="description.carte" name="formSaisie" method="post" action="./index.php?mode=oracle.result">   
 					<?php if ( $this->errors ) { ?>
 					<fieldset class="errors">
 					<legend>Erreurs</legend>
@@ -81,189 +81,204 @@ function secondPassed() {
     document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
     if (seconds == 0) {
         clearInterval(countdownTimer);
-	document.location.href="index.php?mode=oracle.timeout"
+		document.location.href="index.php?mode=oracle.timeout"
         document.getElementById('countdown').innerHTML = "Trop Tard !";
     } else {
         seconds--;
     }
 }
+
+
 // au moment de l'appel à la méthode getUserMedia
+var recorder, recordVideo;
+var record = document.getElementById('record');
+var stop = document.getElementById('stop');
+var deleteFiles = document.getElementById('delete');
 
-navigator.getUserMedia({
+var audio = document.querySelector('audio');
 
-    audio: true,
+var recordAudio = document.getElementById('record-audio');
+// var recordVideo = document.getElementById('record-video');
+var preview = document.getElementById('preview');
 
-},
+var container = document.getElementById('container');
+var countdownTimer;
 
-function(stream) {
+var recordIsOn;
+var audioStream;
 
-    if (stream.getAudioTracks().length === 0) {
 
-            console.log('you have no webcam nore mic available on your device');
-
-    }
-
-    else {
-
-        // continuer les actions
-		document.getElementById('card').innerHTML = "	<dt><label for='mot'><?php echo $lang['word_to_find'];?></label> : <?php echo $this->res['mot'].'</br>'; ?></dt>"+
-								"<dt><label for='tabou1'><?php echo $lang['taboo_1'];?></label> : <?php echo $this->res['tabou1'].'</br>'; ?></dt>"+
-								"<dt><label for='tabou2'><?php echo $lang['taboo_2'];?></label> : <?php echo $this->res['tabou2'].'</br>'; ?></dt>"+
-								"<dt><label for='tabou3'><?php echo $lang['taboo_3'];?></label> : <?php echo $this->res['tabou3'].'</br>'; ?></dt>"+
-								"<dt><label for='tabou4'><?php echo $lang['taboo_4'];?></label> : <?php echo $this->res['tabou4'].'</br>'; ?></dt>"+
-								"<dt><label for='tabou5'><?php echo $lang['taboo_5'];?></label> : <?php echo $this->res['tabou5'].'</br>'; ?></dt>";
-        //var countdownTimer = setInterval('secondPassed()', 1000);
-                var record = document.getElementById('record');
-        var stop = document.getElementById('stop');
-        var deleteFiles = document.getElementById('delete');
-
-        var audio = document.querySelector('audio');
+record.onclick = function() {
 	
-	var recordAudio = document.getElementById('record-audio');
-       // var recordVideo = document.getElementById('record-video');
-        var preview = document.getElementById('preview');
+	record.disabled = true;
+	if (!audioStream){
+		navigator.getUserMedia({
+		audio: {
+			mandatory: {
+				googEchoCancellation: false,
+				googAutoGainControl: false,
+				googNoiseSuppression: false,
+				googHighpassFilter: false
+			},
+			optional: []
+		},
+	},
 
-        var container = document.getElementById('container');
+		function(stream) {
+            
+            if (window.IsChrome) stream = new window.MediaStream(stream.getAudioTracks());
+            
+			if (stream.getAudioTracks().length === 0) {
+					console.log('you have no webcam nore mic available on your device');
+			}
+			
+			else {
+				// continuer les actions
+				countdownTimer = setInterval('secondPassed()', 1000);
+				audioStream = stream;
+				
+				document.getElementById('card').innerHTML = "	<dt><label for='mot'><?php echo $lang['word_to_find'];?></label> : <?php echo $this->res['mot'].'</br>'; ?></dt>"+
+										"<dt><label for='tabou1'><?php echo $lang['taboo_1'];?></label> : <?php echo $this->res['tabou1'].'</br>'; ?></dt>"+
+										"<dt><label for='tabou2'><?php echo $lang['taboo_2'];?></label> : <?php echo $this->res['tabou2'].'</br>'; ?></dt>"+
+										"<dt><label for='tabou3'><?php echo $lang['taboo_3'];?></label> : <?php echo $this->res['tabou3'].'</br>'; ?></dt>"+
+										"<dt><label for='tabou4'><?php echo $lang['taboo_4'];?></label> : <?php echo $this->res['tabou4'].'</br>'; ?></dt>"+
+										"<dt><label for='tabou5'><?php echo $lang['taboo_5'];?></label> : <?php echo $this->res['tabou5'].'</br>'; ?></dt>";
+				actionToDo(audioStream);
 
-        // if you want to record only audio on chrome
-        // then simply set "isFirefox=true"
-	// changement 13/02/15
-	//var isFirefox = true;
-        var isFirefox = !!navigator.mozGetUserMedia;
-	
-	var verif = false;
+			}
+		},
 
-        var recordAudio, recordVideo;
-        record.onclick = function() {
-	    var countdownTimer = setInterval('secondPassed()', 1000);	
-            record.disabled = true;
-            navigator.getUserMedia({
-                audio: true,
-		// supression du délenchement du périphérique vidéo
-                //video: true
-            }, function(stream) {
-                preview.src = window.URL.createObjectURL(stream);
-                preview.play();
+		function(error){
+		 // Script pour le PopUp  l'ouverture de la page , prévenir l'utilisateur de couper le son
+		$(document).ready(function() {
+		// select the overlay element - and "make it an overlay"
+		$("#facebox").overlay({
+
+		// some mask tweaks suitable for facebox-looking dialogs
+		mask: {
+		// you might also consider a "transparent" color for the mask
+		color: '#000000',
+		// load mask a little faster
+		loadSpeed: 1000,
+		// very transparent
+		opacity: 0.7
+		},
+		// disable this for modal dialog-type of overlays
+		closeOnClick: true,
+		// we want to use the programming API
+		api: true
+
+		// load it after delay
+		})
+		var ol = $("#facebox").overlay({api: true});
+		// wait 20 seconds, then load the overlay
+		setTimeout(function() {
+		ol.load();
+		}, 0);
+		setTimeout(function() {
+		ol.close();
+		document.location.href="index.php"
+		}, 10000);
+		}); 
 		
 
-                // var legalBufferValues = [256, 512, 1024, 2048, 4096, 8192, 16384];
-                // sample-rates in at least the range 22050 to 96000.
-                recordAudio = RecordRTC(stream, {
-                    //bufferSize: 16384,
-                    //sampleRate: 45000,
-                       onAudioProcessStarted: function() {
-                        if (!isFirefox) {
-                            recordVideo.startRecording();
-                        }
-                    }
-                });
+		<!-- alert(error); -->    
+			
+		});
+	}
+	else{	
+		actionToDo(audioStream);
+		}
+		
+}
 
-                if (isFirefox) {
-                    recordAudio.startRecording();
-		    type: 'audio'
-		   
-                }
+function actionToDo (stream){
+	// if you want to record only audio on chrome
+	// then simply set "isFirefox=true"
+	// changement 13/02/15
+	var isFirefox = true;
+	var isFirefox = !!navigator.mozGetUserMedia;
 
-                if (!isFirefox) {
-                    recordVideo = RecordRTC(stream, {
-                        type: 'video'
-                    });
-                    recordAudio.startRecording();
 
-                }
+	preview.src = window.URL.createObjectURL(stream);
+	preview.play();
 
-                stop.disabled = false;
-            }, function(error) {
-                alert(JSON.stringify(error, null, '\t'));
-            });
-        };
-
-        var fileName;
-        stop.onclick = function() {
-			document.getElementById('form-cmd').style.visibility="visible"; 
-            record.disabled = false;
-            stop.disabled = true;
-
-            preview.src = '';
-	/* *******/
+	// var legalBufferValues = [256, 512, 1024, 2048, 4096, 8192, 16384];
+	// sample-rates in at least the range 22050 to 96000.
 	
-	            //fileName = Math.round(Math.random() * 99999999) + 99999999;
-		    fileName = 'oracle' + Math.round(Math.random() * 999999) + 1;
+	recorder = RecordRTC(stream, {
+		//bufferSize: 16384,
+		//sampleRate: 45000,
+		   onAudioProcessStarted: function() {
+			if (!isFirefox) {
+				recordVideo.startRecording();
+			}
+		}
+	});
 
-            if (!isFirefox) {
-                recordAudio.stopRecording(function() {
-                    PostBlob(recordAudio.getBlob(), 'audio', fileName + '.wav');
-                });
-            }
-	   
-	   else {
-                recordAudio.stopRecording(function(url) {
-                    preview.src = url;
-                    PostBlob(recordAudio.getBlob(), 'audio', fileName + '.wav');
-                });
-            }
-	    
-            deleteFiles.disabled = false;
-        };
+	if (isFirefox) {
+		recorder.startRecording();
+		type: 'audio'
+	}
 
-        deleteFiles.onclick = function() {
-			document.getElementById('form-cmd').style.visibility="hidden";
-            deleteAudioVideoFiles();
-        };
+	if (!isFirefox) {
+		recordVideo = RecordRTC(stream, {
+		type: 'video'
+		});
+		recorder.startRecording();
 
-        function deleteAudioVideoFiles() {
-            deleteFiles.disabled = true;
-            if (!fileName) return;
-            var formData = new FormData();
-            formData.append('delete-file', fileName);
-            xhr('delete.php', formData, null, null, function(response) {
-                console.log(response);
-            });
-            fileName = null;
-            container.innerHTML = '';
-        }
+	}
 
-    }
+	stop.disabled = false;
 
-},
 
-function(error){
- // Script pour le PopUp  l'ouverture de la page , prévenir l'utilisateur de couper le son
-$(document).ready(function() {
-// select the overlay element - and "make it an overlay"
-$("#facebox").overlay({
+	var fileName;
+	stop.onclick = function() {
+		document.getElementById('form-cmd').style.visibility="visible"; 
+		record.disabled = true;
+		stop.disabled = true;
 
-// some mask tweaks suitable for facebox-looking dialogs
-mask: {
-// you might also consider a "transparent" color for the mask
-color: '#000000',
-// load mask a little faster
-loadSpeed: 1000,
-// very transparent
-opacity: 0.7
-},
-// disable this for modal dialog-type of overlays
-closeOnClick: true,
-// we want to use the programming API
-api: true
+		preview.src = '';
+	/* *******/
 
-// load it after delay
-})
-var ol = $("#facebox").overlay({api: true});
-// wait 20 seconds, then load the overlay
-setTimeout(function() {
-ol.load();
-}, 0);
-setTimeout(function() {
-ol.close();
-}, 10000);
-}); 
+			//fileName = Math.round(Math.random() * 99999999) + 99999999;
+		fileName = 'oracle' + Math.round(Math.random() * 999999) + 1;
 
-<!-- alert(error); -->    
+		if (!isFirefox) {
+			recorder.stopRecording(function() {
+				PostBlob(recorder.getBlob(), 'audio', fileName + '.wav');
+			});
+		}
 
-    
+	else {
+			recorder.stopRecording(function(url) {
+				preview.src = url;
+				PostBlob(recorder.getBlob(), 'audio', fileName + '.wav');
+			});
+		}
 
-});
+		deleteFiles.disabled = false;
+	};
+
+	deleteFiles.onclick = function() {
+		document.getElementById('form-cmd').style.visibility="hidden";
+		deleteAudioVideoFiles();
+		record.disabled = false;
+	};
+
+	function deleteAudioVideoFiles() {
+		deleteFiles.disabled = true;
+		if (!fileName) return;
+		var formData = new FormData();
+		formData.append('delete-file', fileName);
+		xhr('delete.php', formData, null, null, function(response) {
+			console.log(response);
+		});
+		fileName = null;
+		container.innerHTML = '';
+	}
+}
+
 
 //fin timer
 </script>
@@ -353,7 +368,9 @@ ol.close();
 		    request.open('POST', url);
 		    request.send(data);
 		}
-	
+	function menu(){
+		document.location.href="index.php"
+	}
 	// Fonction de validation de l'enregistrement
 	//~ function validate() {
 	//~ if (document.formSaisie.fileName != null ) {

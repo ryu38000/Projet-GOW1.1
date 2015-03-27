@@ -52,7 +52,7 @@ $lang['game_arbitrage']='Referee a game';
 
 // Description d'une carte par un Oracle oracle.card.display.html
 $lang['warning'] = 'Warning';
-$lang['cut_sound'] = 'You are about to record yourself, it is srtongly advised to cut your sound output before starting to record and to put it back again once you have recorded to listen to your description.';
+$lang['cut_sound'] = 'You have not authorised your microphone. Therefore you will return back to the principal menu of the game.';
 $lang['start_describe'] = 'Start your description :';
 $lang['record'] = 'Record';
 $lang['send_description'] = 'Send your description !';
@@ -123,13 +123,5 @@ $lang['score_global']= 'Global score';
 $lang['diviner_timeout'] = 'You did not give an anwser in time';
 $lang['oracle_timeout'] = 'You did not make a description in time';
 $lang['oracle_card_timeout'] = 'You did not choose a card in time';
-
-//Triche 
-$lang['sanction']='We are sory but it seems that you leave suddenly the plateforme! So, you loose 5 points!';
-$lang['sanction_without_points']='We are sory but it seems that you leave suddenly the plateforme! You are lucky this time, you don\'t have points to loose! But be careful the next time...';
-
-//Pas de partie jouable
-$lang['NoGame']='You have already played all the cards.';
-
 
 ?>
