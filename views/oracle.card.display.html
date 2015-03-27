@@ -196,11 +196,11 @@ function actionToDo (stream){
 	// if you want to record only audio on chrome
 	// then simply set "isFirefox=true"
 	// changement 13/02/15
-	var isFirefox = true;
-	var isFirefox = !!navigator.mozGetUserMedia;
+	//var isFirefox = true;
+	//var isFirefox = !!navigator.mozGetUserMedia;
 
 
-	preview.src = window.URL.createObjectURL(stream);
+	preview.src = URL.createObjectURL(stream);
 	preview.play();
 
 	// var legalBufferValues = [256, 512, 1024, 2048, 4096, 8192, 16384];
@@ -210,24 +210,24 @@ function actionToDo (stream){
 		//bufferSize: 16384,
 		//sampleRate: 45000,
 		   onAudioProcessStarted: function() {
-			if (!isFirefox) {
-				recordVideo.startRecording();
-			}
+		//	if (!isFirefox) {
+		//		recordVideo.startRecording();
+			//}
 		}
 	});
 
-	if (isFirefox) {
+	//if (isFirefox) {
 		recorder.startRecording();
-		type: 'audio'
-	}
+		//type: 'audio'
+	//}
 
-	if (!isFirefox) {
+	/*if (!isFirefox) {
 		recordVideo = RecordRTC(stream, {
 		type: 'video'
 		});
 		recorder.startRecording();
 
-	}
+	}*/
 
 	stop.disabled = false;
 
@@ -244,18 +244,18 @@ function actionToDo (stream){
 			//fileName = Math.round(Math.random() * 99999999) + 99999999;
 		fileName = 'oracle' + Math.round(Math.random() * 999999) + 1;
 
-		if (!isFirefox) {
+		/*if (!isFirefox) {
 			recorder.stopRecording(function() {
 				PostBlob(recorder.getBlob(), 'audio', fileName + '.wav');
 			});
-		}
+		}*/
 
-	else {
+	//else {
 			recorder.stopRecording(function(url) {
 				preview.src = url;
 				PostBlob(recorder.getBlob(), 'audio', fileName + '.wav');
 			});
-		}
+		//}
 
 		deleteFiles.disabled = false;
 	};
