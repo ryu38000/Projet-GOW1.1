@@ -104,6 +104,7 @@ $lang['card_oracle'] = 'You listen to the description of :';
 $lang['card_level'] = 'Level of the card : ';
 $lang['guess'] = 'Guess !';
 $lang['which_word'] = 'What is the word described ?';
+$lang['NoGame']='There is not any cards to play.';
 
 //Résultats, Scores et Points
 $lang['well_done'] = 'Congratulation!';

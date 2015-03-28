@@ -104,6 +104,7 @@ $lang['card_oracle'] = 'Tu écoutes la description de';
 $lang['card_level'] = 'Niveau de la carte décrite';
 $lang['guess'] = 'Devine !';
 $lang['which_word'] = 'Quel est le mot décrit ?';
+$lang['NoGame']='Il n\'y a pas de partie disponible'; 
 
 //Résultats, Scores et Points
 $lang['well_done'] = 'Félicitation!';
