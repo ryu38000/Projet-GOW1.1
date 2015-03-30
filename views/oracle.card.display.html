@@ -48,9 +48,12 @@ include('./views/page.header.html');
 						    <audio id="preview"></audio>
 						    </p>
 						    <hr />
+						    <div><img src="style/img/recording.png" alt="Recording" id="rec" style="float:left;width:35px;height:35px;margin-left:20px;margin-top:17px;"></div>
+						    <div style="padding:20px;">
 						    <button class="btn btn-primary" id="record"><?php echo $lang['record']; ?></button> </br>
 						    <button class="btn btn-primary" id="stop" disabled><?php echo $lang['send_description']; ?></button></br>
 						    <button class="btn btn-primary" id="delete" disabled><?php echo $lang['erase']; ?></button>
+						    </div>
 						    <div id="container" style="padding:1em 2em;"></div>
 						</dl>
 						<dl> <p id="audiovide"></p></dl>
@@ -69,6 +72,32 @@ include('./views/page.header.html');
 -->
 
 <script>
+// au moment de l'appel à la méthode getUserMedia
+var recorder, recordVideo;
+var record = document.getElementById('record');
+var stop = document.getElementById('stop');
+var deleteFiles = document.getElementById('delete');
+
+var recButton;
+var audio = document.querySelector('audio');
+
+var recordAudio = document.getElementById('record-audio');
+// var recordVideo = document.getElementById('record-video');
+var preview = document.getElementById('preview');
+
+var container = document.getElementById('container');
+var countdownTimer;
+
+var recordIsOn;
+var audioStream;
+var fileName;	
+	
+	
+	
+	
+	
+	
+	
 // Timer
 // Intialisation du timerà 80 secondes, le popup étant de 10 secondes maximum.
 var seconds = 70;
@@ -81,31 +110,41 @@ function secondPassed() {
     document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
     if (seconds == 0) {
         clearInterval(countdownTimer);
-		document.location.href="index.php?mode=oracle.timeout"
+		//document.location.href="index.php?mode=oracle.timeout"
         document.getElementById('countdown').innerHTML = "Trop Tard !";
+        document.getElementById("rec").style.visibility="hidden";
+        document.getElementById('form-cmd').style.visibility="visible"; 
+		
+		if(deleteFiles.disabled === true){
+			stop.disabled = true;
+			record.disabled = true;
+			deleteFiles.disabled = true;
+
+
+		}
+		else{
+			stop.disabled = true;
+			record.disabled = true;
+			deleteFiles.disabled = true;
+		}
+
+	
     } else {
         seconds--;
     }
 }
 
 
-// au moment de l'appel à la méthode getUserMedia
-var recorder, recordVideo;
-var record = document.getElementById('record');
-var stop = document.getElementById('stop');
-var deleteFiles = document.getElementById('delete');
+function hideRecButton(){
+	if(document.getElementById("rec").style.visibility === "visible"){
+		document.getElementById("rec").style.visibility="hidden";
+	}
+	else{
+		document.getElementById("rec").style.visibility = "visible"
+	}
 
-var audio = document.querySelector('audio');
+}
 
-var recordAudio = document.getElementById('record-audio');
-// var recordVideo = document.getElementById('record-video');
-var preview = document.getElementById('preview');
-
-var container = document.getElementById('container');
-var countdownTimer;
-
-var recordIsOn;
-var audioStream;
 
 
 record.onclick = function() {
@@ -133,6 +172,7 @@ record.onclick = function() {
 			}
 			
 			else {
+				
 				// continuer les actions
 				countdownTimer = setInterval('secondPassed()', 1000);
 				audioStream = stream;
@@ -210,6 +250,8 @@ function actionToDo (stream){
 		//bufferSize: 16384,
 		//sampleRate: 45000,
 		   onAudioProcessStarted: function() {
+		  document.getElementById("rec").style.visibility="visible";
+		recButton = setInterval('hideRecButton()', 500);
 		//	if (!isFirefox) {
 		//		recordVideo.startRecording();
 			//}
@@ -232,12 +274,13 @@ function actionToDo (stream){
 	stop.disabled = false;
 
 
-	var fileName;
 	stop.onclick = function() {
 		document.getElementById('form-cmd').style.visibility="visible"; 
 		record.disabled = true;
 		stop.disabled = true;
-
+		clearInterval(recButton);
+		document.getElementById("rec").style.visibility="visible";
+		
 		preview.src = '';
 	/* *******/
 
@@ -281,9 +324,6 @@ function actionToDo (stream){
 
 
 //fin timer
-</script>
-
-<script>
 
 // Enregistrement d'un fichiers audio .wav sur le serveur
 

@@ -1,0 +1,19 @@
+<html>
+	<head>Deviner partie</head>
+	<body>
+	<audio id="enregistrement" controls></audio>
+	<button id="start" type="button" onClick="valider()">play</button>
+	<script>
+	var audio=document.getElementById("enregistrement");
+//	var butt=document.getElementById("start");
+	audio.src='<?php echo $this->adresse;?>';
+	audio.muted=false;
+	function valider(){
+		audio.play();
+	
+	}
+//	audio.addEventListener("pause", function (){audio.play()});
+	</script>
+
+	</body>
+</html>

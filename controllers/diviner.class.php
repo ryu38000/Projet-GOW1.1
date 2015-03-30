@@ -214,6 +214,8 @@ class diviner_game
 	private function display()
 	{
 		include('./views/diviner.game.html');
+	//	include('./views/diviner.test.html');
+		
         return true;
 	}
 
