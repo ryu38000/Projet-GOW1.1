@@ -50,9 +50,9 @@ include('./views/page.header.html');
 						    <hr />
 						    <div><img src="style/img/recording.png" alt="Recording" id="rec" style="float:left;width:35px;height:35px;margin-left:20px;margin-top:17px;"></div>
 						    <div style="padding:20px;">
-						    <button class="btn btn-primary" id="record"><?php echo $lang['record']; ?></button> </br>
-						    <button class="btn btn-primary" id="stop" disabled><?php echo $lang['send_description']; ?></button></br>
-						    <button class="btn btn-primary" id="delete" disabled><?php echo $lang['erase']; ?></button>
+						    <button class="btn btn-primary" id="record" type="button"><?php echo $lang['record']; ?></button> </br>
+						    <button class="btn btn-primary" id="stop" type="button" disabled><?php echo $lang['send_description']; ?></button></br>
+						    <button class="btn btn-primary" id="delete" type="button" disabled><?php echo $lang['erase']; ?></button>
 						    </div>
 						    <div id="container" style="padding:1em 2em;"></div>
 						</dl>
@@ -91,12 +91,11 @@ var countdownTimer;
 var recordIsOn;
 var audioStream;
 var fileName;	
-	
-	
-	
-	
-	
-	
+
+navigator.getUserMedia = navigator.getUserMedia       ||
+					   navigator.webkitGetUserMedia ||
+					   navigator.mozGetUserMedia    ||
+					   null;
 	
 // Timer
 // Intialisation du timerà 80 secondes, le popup étant de 10 secondes maximum.
@@ -149,21 +148,12 @@ function hideRecButton(){
 }
 
 
-
 record.onclick = function() {
 	
 	record.disabled = true;
 	if (!audioStream){
 		navigator.getUserMedia({
-		audio: {
-			mandatory: {
-				googEchoCancellation: false,
-				googAutoGainControl: false,
-				googNoiseSuppression: false,
-				googHighpassFilter: false
-			},
-			optional: []
-		},
+		audio: true,
 	},
 
 		function(stream) {
@@ -203,44 +193,21 @@ record.onclick = function() {
 }
 
 function actionToDo (stream){
-	// if you want to record only audio on chrome
-	// then simply set "isFirefox=true"
-	// changement 13/02/15
-	//var isFirefox = true;
-	//var isFirefox = !!navigator.mozGetUserMedia;
-
 
 	preview.src = URL.createObjectURL(stream);
-	preview.play();
+	preview.muted = true;
 
-	// var legalBufferValues = [256, 512, 1024, 2048, 4096, 8192, 16384];
-	// sample-rates in at least the range 22050 to 96000.
 	
 	recorder = RecordRTC(stream, {
-		//bufferSize: 16384,
-		//sampleRate: 45000,
+
 		   onAudioProcessStarted: function() {
 		   document.getElementById("rec").style.visibility="visible";
 		   recButton = setInterval('hideRecButton()', 500);
-		//	if (!isFirefox) {
-		//		recordVideo.startRecording();
-			//}
+
 		}
 	});
 
-	//if (isFirefox) {
-		recorder.startRecording();
-		//type: 'audio'
-	//}
-
-	/*if (!isFirefox) {
-		recordVideo = RecordRTC(stream, {
-		type: 'video'
-		});
-		recorder.startRecording();
-
-	}*/
-
+	recorder.startRecording();
 	stop.disabled = false;
 
 
@@ -252,23 +219,14 @@ function actionToDo (stream){
 		document.getElementById("rec").style.visibility="visible";
 		
 		preview.src = '';
-	/* *******/
 
-			//fileName = Math.round(Math.random() * 99999999) + 99999999;
 		fileName = 'oracle' + Math.round(Math.random() * 999999) + 1;
 
-		/*if (!isFirefox) {
-			recorder.stopRecording(function() {
-				PostBlob(recorder.getBlob(), 'audio', fileName + '.wav');
-			});
-		}*/
-
-	//else {
+			
 			recorder.stopRecording(function(url) {
 				preview.src = url;
 				PostBlob(recorder.getBlob(), 'audio', fileName + '.wav');
 			});
-		//}
 
 		deleteFiles.disabled = false;
 	};
@@ -279,21 +237,21 @@ function actionToDo (stream){
 		record.disabled = false;
 	};
 
-	function deleteAudioVideoFiles() {
-		deleteFiles.disabled = true;
-		if (!fileName) return;
-		var formData = new FormData();
-		formData.append('delete-file', fileName);
-		xhr('delete.php', formData, null, null, function(response) {
-			console.log(response);
-		});
-		fileName = null;
-		container.innerHTML = '';
-	}
+
 }
 
+function deleteAudioVideoFiles() {
+	deleteFiles.disabled = true;
+	if (!fileName) return;
+	var formData = new FormData();
+	formData.append('delete-file', fileName);
+	xhr('delete.php', formData, null, null, function(response) {
+		console.log(response);
+	});
+	fileName = null;
+	container.innerHTML = '';
+}
 
-//fin timer
 function popUp(){
 	 // Script pour le PopUp  l'ouverture de la page , prévenir l'utilisateur de couper le son
 	$(document).ready(function() {
@@ -329,102 +287,89 @@ function popUp(){
 }
 // Enregistrement d'un fichiers audio .wav sur le serveur
 
-        // PostBlob method uses XHR2 and FormData to submit 
-        // recorded blob to the PHP server
-        function PostBlob(blob, fileType, fileName) {
-            // FormData
-            var formData = new FormData();
-            formData.append(fileType + '-filename', fileName);
-            formData.append(fileType + '-blob', blob);
+// PostBlob method uses XHR2 and FormData to submit 
+// recorded blob to the PHP server
+function PostBlob(blob, fileType, fileName) {
+	// FormData
+	var formData = new FormData();
+	formData.append(fileType + '-filename', fileName);
+	formData.append(fileType + '-blob', blob);
 
-            // progress-bar
-            var hr = document.createElement('hr');
-            container.appendChild(hr);
-            var strong = document.createElement('strong');
-            strong.id = 'percentage';
-            strong.innerHTML = fileType + ' oracleupload progress: ';
-            container.appendChild(strong);
-            var progress = document.createElement('progress');
-            container.appendChild(progress); 
+	// progress-bar
+	var hr = document.createElement('hr');
+	container.appendChild(hr);
+	var strong = document.createElement('strong');
+	strong.id = 'percentage';
+	strong.innerHTML = fileType + ' oracleupload progress: ';
+	container.appendChild(strong);
+	var progress = document.createElement('progress');
+	container.appendChild(progress); 
 
 
-	//Récupération des identifiants pour insertion dans la table enregistrement
-	var userid = $("#userid").attr("data-userid");
-	var userlang = $("#userlang").attr("data-userlang");
-	var cardid = $("#cardid").attr("data-cardid");
-	var levelcard = $("#levelcard").attr("data-levelcard");
+//Récupération des identifiants pour insertion dans la table enregistrement
+var userid = $("#userid").attr("data-userid");
+var userlang = $("#userlang").attr("data-userlang");
+var cardid = $("#cardid").attr("data-cardid");
+var levelcard = $("#levelcard").attr("data-levelcard");
 
-            // POST the Blob using XHR2
-	    xhr('save.php?userid="'+userid+'"&userlang="'+userlang+'"&cardid="'+cardid+'"&levelcard="'+levelcard+'"', formData, progress, percentage, function(fileURL) {
-                container.appendChild(document.createElement('hr'));
-		
-                var mediaElement = document.createElement(fileType);
+	// POST the Blob using XHR2
+xhr('save.php?userid="'+userid+'"&userlang="'+userlang+'"&cardid="'+cardid+'"&levelcard="'+levelcard+'"', formData, progress, percentage, function(fileURL) {
+		container.appendChild(document.createElement('hr'));
 
-                var source = document.createElement('source');
-                var href = location.href.substr(0, location.href.lastIndexOf('/') + 1);
-                source.src = href + fileURL;
+		var mediaElement = document.createElement(fileType);
 
-               // if (fileType == 'video') source.type = 'video/webm; codecs="vp8, vorbis"';
-	       if (fileType == 'audio') source.type = 'audio/mp3';
-		//if (fileType == 'audio') source.type = 'audio/wav';
-               //if (fileType == 'audio') source.type = !!navigator.mozGetUserMedia ? 'audio/ogg' : 'audio/wav';
+		var source = document.createElement('source');
+		var href = location.href.substr(0, location.href.lastIndexOf('/') + 1);
+		source.src = href + fileURL;
 
-                mediaElement.appendChild(source);
+   if (fileType == 'audio') source.type = 'audio/mp3';
 
-                mediaElement.controls = true;
-                container.appendChild(mediaElement);
-                mediaElement.play();
 
-                progress.parentNode.removeChild(progress);
-                strong.parentNode.removeChild(strong);
-                hr.parentNode.removeChild(hr);
-            });
-        }
+		mediaElement.appendChild(source);
+		mediaElement.muted = false;
+		mediaElement.controls = true;
+		container.appendChild(mediaElement);
+		mediaElement.play();
+
+		progress.parentNode.removeChild(progress);
+		strong.parentNode.removeChild(strong);
+		hr.parentNode.removeChild(hr);
+	});
+}
 
 
 
-        function xhr(url, data, progress, percentage, callback) {
-            var request = new XMLHttpRequest();
-            request.onreadystatechange = function() {
-                if (request.readyState == 4 && request.status == 200) {
-                    callback(request.responseText);
-                }
-            };
-	
-		    if (url.indexOf('delete.php') == -1) {
-			request.upload.onloadstart = function() {
-			    percentage.innerHTML = 'Upload started...';
-			};
-
-			request.upload.onprogress = function(event) {
-			    progress.max = event.total;
-			    progress.value = event.loaded;
-			    percentage.innerHTML = 'Upload Progress ' + Math.round(event.loaded / event.total * 100) + "%";
-			};
-
-			request.upload.onload = function() {
-			    percentage.innerHTML = 'Saved!';
-			};
-		    }
-
-		    request.open('POST', url);
-		    request.send(data);
+function xhr(url, data, progress, percentage, callback) {
+	var request = new XMLHttpRequest();
+	request.onreadystatechange = function() {
+		if (request.readyState == 4 && request.status == 200) {
+			callback(request.responseText);
 		}
-	function menu(){
-		document.location.href="index.php"
+	};
+
+	if (url.indexOf('delete.php') == -1) {
+	request.upload.onloadstart = function() {
+		percentage.innerHTML = 'Upload started...';
+	};
+
+	request.upload.onprogress = function(event) {
+		progress.max = event.total;
+		progress.value = event.loaded;
+		percentage.innerHTML = 'Upload Progress ' + Math.round(event.loaded / event.total * 100) + "%";
+	};
+
+	request.upload.onload = function() {
+		percentage.innerHTML = 'Saved!';
+	};
 	}
-	// Fonction de validation de l'enregistrement
-	//~ function validate() {
-	//~ if (document.formSaisie.fileName != null ) {
-	//~ //if (document.formSaisie.record.disabled == true ) {
-		//~ return true;
-	//~ }
-	//~ // Si l'enregistrement n'a pas été fait :
-		//~ else {
-		//~ alert ('Tu dois faire un enregistrement !');
-			//~ return false;
-		//~ }
-	//~ };
+
+	request.open('GET', url, true);
+	request.send(data);
+}
+function menu(){
+document.location.href="index.php"
+}
+
         </script>
 	
 <?php

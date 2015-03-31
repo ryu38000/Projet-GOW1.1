@@ -125,4 +125,12 @@ $lang['diviner_timeout'] = 'You did not give an anwser in time';
 $lang['oracle_timeout'] = 'You did not make a description in time';
 $lang['oracle_card_timeout'] = 'You did not choose a card in time';
 
+
+//Triche 
+$lang['sanction']='We are sory but it seems that you leave suddenly the plateforme! So, you loose 5 points!';
+$lang['sanction_without_points']='We are sory but it seems that you leave suddenly the plateforme! You are lucky this time, you don\'t have points to loose! But be careful the next time...';
+
+//Pas de partie jouable
+$lang['NoGame']='You have already played all the cards.';
+
 ?>

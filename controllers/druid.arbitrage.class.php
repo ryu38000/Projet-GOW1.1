@@ -14,6 +14,7 @@ class druid_arbitrage
 	private $result= '';
 	private $mode = '';
 	private $adresse = '';
+	private $oracle = '';
 	
 	private $previousSGO = 0;
 	private $previousSO = 0;
@@ -67,8 +68,8 @@ class druid_arbitrage
 			FROM enregistrement WHERE idOracle!='.$this->druid.' AND OracleLang="'.$this->userlang.'" AND RAND() > 0.9  ORDER BY RAND() LIMIT 1';	    
         $this->result=$db->query($sql);
 	
-		//~ //la requete r�cup�re un enregistrement au hasard et v�rifie si cet enregistrement
-		//~ //est d�j� vu par le druide
+		//~ //la requete récupère un enregistrement au hasard et vérifie si cet enregistrement
+		//~ //est déjà vu par le druide
 		//$i=0;
 		//while ($i < 10) {
 		//	$i++;
@@ -87,7 +88,7 @@ class druid_arbitrage
 			//~ }
 		//~ }
 		//~ if ($j == sizeof($this->result)) {
-			//~ echo "\nPartie impossible pour le druide : tous les enregistrements ont d�j� �t� vus.\n";
+			//~ echo "\nPartie impossible pour le druide : tous les enregistrements ont déjà été vus.\n";
 		//~ }
 			
 		// //}
@@ -95,9 +96,10 @@ class druid_arbitrage
 		
         $this->raisin= mysqli_fetch_assoc($this->result);
 	
-		if(!(isset($_SESSION['enregistrementID']))){
-			$_SESSION['enregistrementID'] = $this->raisin["enregistrementID"];
-		}	
+		#if(!(isset($_SESSION['enregistrementID']))){
+		#	$_SESSION['enregistrementID'] = $this->raisin["enregistrementID"];
+		#}
+		#echo $_SESSION['enregistrementID'];	
 	
 		// récupération du pseudo du joueur arbitré
 		 $sql = 'SELECT 
@@ -123,15 +125,17 @@ class druid_arbitrage
 
 	private function display_et_scores()
 	{
-		if(isset($_POST["enregistrementID"])){$this->enregistrement = $_POST["enregistrementID"];} //Nécessaire pour ne pas avoir un autre enregistrementID...
-		
-
+		//if(isset($_POST["enregistrement"])){$this->enregistrement = $_POST["enregistrement"];} //Nécessaire pour ne pas avoir un autre enregistrementID...
+		if(isset($_POST["enregistrement1"])  &&  isset($_POST["oracle"])){
+			$this->enregistrement = $_POST["enregistrement1"];
+			$this->oracle = $_POST['oracle'];
+			}
 		// après avoir cliqué sur "au bûcher" = description vide ou fautive
 		if(isset($_POST['invalidate']))
 		{
 			//connexion à la BD
 			$db = db::getInstance(); 
-			
+
 			// Requête d'insertion des info dans la table 'arbitrage'
 			$sql = 'INSERT INTO arbitrage
 			(enregistrementID,idDruide,tpsArbitrage,validation)
@@ -142,7 +146,6 @@ class druid_arbitrage
 					$db->escape((string) $this->invalid ) . ')' ;
 					
 				$db->query($sql);
-					
 			// Mise en commentaire provisoirement. Servirait à supprimer la description fautive pour les arbitres ne tombent plus dessus
 				//$sql = 'DELETE 
 				//FROM enregistrement WHERE carteID='.$this->raisin['carteID'].'';
@@ -151,7 +154,7 @@ class druid_arbitrage
 		// Requête de modification du score de l'Oracle dont la description est jetée en pâture aux flammes du bûcher purificateur
 			
 			//récupération du score précédent;
-			$sql = 'SELECT `scoreGlobal`,`scoreOracle` FROM `score` WHERE `userid`="'.$this->raisin['idOracle'].'"';
+			$sql = 'SELECT `scoreGlobal`,`scoreOracle` FROM `score` WHERE `userid`="'.$this->oracle.'"';
 			$result=$db->query($sql);
 			$res= mysqli_fetch_assoc($result);
 
@@ -171,7 +174,7 @@ class druid_arbitrage
 			$sql = 'UPDATE score 
 					SET  scoreGlobal='.$db->escape((string) $this->previousSGO) . ', ' .
 					'scoreOracle='.$db->escape((string) $this->previousSO) . '
-					WHERE userid='.$this->raisin['idOracle'].'';
+					WHERE userid='.$this->oracle.'';
 					
 			$db->query($sql);
 			
@@ -218,14 +221,15 @@ class druid_arbitrage
 				//	mettre à jour le champs "validation" de la table enregistrement pour que cet enregistrement devienne jouable
 				$sql = 'UPDATE enregistrement 
 				SET validation =  ' .$db->escape((string) $this->valid ) . ' 
-				WHERE enregistrementID="'.$this->raisin['enregistrementID'].'" ' ;
+				WHERE enregistrementID="'.$this->enregistrement .'" ' ;
+				
 					
 				$db->query($sql);	
 				
 			// Requête de modification du score de l'Oracle dont la description est élevée au rang de prediction divine
 			
 				//récupération du score précédent;
-				$sql = 'SELECT `scoreGlobal`,`scoreOracle` FROM `score` WHERE `userid`="'.$this->raisin['idOracle'].'"';
+				$sql = 'SELECT `scoreGlobal`,`scoreOracle` FROM `score` WHERE `userid`="'.$this->oracle.'"';
 				$result=$db->query($sql);
 				$res= mysqli_fetch_assoc($result);
 
@@ -243,7 +247,7 @@ class druid_arbitrage
 				$sql = 'UPDATE score 
 					SET  scoreGlobal='.$db->escape((string) $this->previousSGO) . ', ' .
 					'scoreOracle='.$db->escape((string) $this->previousSO) . '
-					WHERE userid='.$this->raisin['idOracle'].'';
+					WHERE userid='.$this->oracle.'';
 					
 				$db->query($sql);
 				

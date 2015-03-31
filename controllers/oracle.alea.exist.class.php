@@ -88,7 +88,7 @@ class oracle_alea_exist
 
 		}	
 			// Sinon, aucune carte n'est compatible
-			echo "aucune carte disponible pour l'instant.";
+			//echo "aucune carte disponible pour l'instant.";
 		return false;
 	}
 

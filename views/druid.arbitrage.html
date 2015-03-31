@@ -23,7 +23,7 @@ include('./views/page.header.html');
 					<dl>
 						<dt><label for="beware"><?php echo $lang['listen']; ?></label></dt>
          
-						<?php echo "chemin_enregistrement: ".$this->raisin['cheminEnregistrement']."\n";?> <!-- � retirer apr�s les tests-->
+						<?php echo "chemin_enregistrement: ".$this->raisin['cheminEnregistrement']."\n";?> <!-- à retirer après les tests-->
 						<dt><?php echo $lang['card_oracle'];?> : <?php echo $this->res2['username'].'</br>'; ?></dt>
 						<dt><?php echo $lang['card_level'];?> : <?php echo $this->raisin['nivcarte'].'</br>'; ?></dt>
 						
@@ -64,7 +64,9 @@ include('./views/page.header.html');
 						<input class="btn btn-lg btn-primary btn-block" type="submit" id="validate" name="validate" value="<?php echo $lang['validate']; ?>" />
 						<input class="btn btn-lg btn-primary btn-block" type="submit" id="invalidate" name="invalidate" value="<?php echo $lang['invalidate']; ?>" />
 						<input type="hidden" name="mode" value="<?php echo $this->mode; ?>"/>
-
+						<input type="hidden" name="enregistrement1" value="<?php echo $this->enregistrement; ?>"/>
+						<input type="hidden" name="oracle" value="<?php echo $this->raisin['idOracle']; ?>"/>
+						
 					</div>
 				</fieldset>
 			</form>
@@ -75,7 +77,7 @@ include('./views/page.header.html');
 <script language="Javascript"> 
 
 		
-		// fonction de changement d'état appelée par chacune des deux fonctions	
+		// fonction de changement d'Ã©tat appelÃ©e par chacune des deux fonctions	
 		var niveau = $this->raisin['nivcarte'];
 		
 		function bascule(niveau)
