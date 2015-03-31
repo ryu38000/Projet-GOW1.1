@@ -54,7 +54,7 @@ $lang['game_arbitrage']='Arbitrage d\'une partie';
 $lang['warning'] = 'Attention, votre micro n\'a pas été activé.';
 $lang['cut_sound'] = 'vous serez par conséquant redirigé vers le menu principal. Veuillez paramétrer votre micro';
 $lang['start_describe'] = 'Commence ta description :';
-$lang['record'] = 'Enregistre-toi';
+$lang['record'] = 'Jouer';
 $lang['send_description'] = 'Envoie ta description !';
 $lang['erase'] = 'Efface et recommence';
 

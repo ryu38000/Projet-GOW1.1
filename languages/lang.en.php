@@ -54,7 +54,7 @@ $lang['game_arbitrage']='Referee a game';
 $lang['warning'] = 'Warning';
 $lang['cut_sound'] = 'You have not authorised your microphone. Therefore you will return back to the principal menu of the game.';
 $lang['start_describe'] = 'Start your description :';
-$lang['record'] = 'Record';
+$lang['record'] = 'Play';
 $lang['send_description'] = 'Send your description !';
 $lang['erase'] = 'Erase and restart';
 
