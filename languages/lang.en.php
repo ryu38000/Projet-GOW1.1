@@ -66,6 +66,7 @@ $lang['taboo_4'] = 'Word Taboo 4';
 $lang['taboo_5'] = 'Word Taboo 5';
 
 $lang['word_to_find'] = 'Word to Find';
+$lang["wordForbid"] = 'Forbidden words';
 $lang['word_direction'] = 'Choose your difficulty level: ';
 $lang['level_easy'] = 'Easy';
 $lang['level_medium'] = 'Medium';
@@ -86,7 +87,8 @@ $lang['card_by_id'] ='Card by it\'s Identification';
 
 // Description d'une carte : Oracle
 $lang['card_descr'] = 'Card Description';
-$lang['beware_time'] = 'Beware! You are limited in time.';
+$lang['description'] = 'You let the others gusse your description of the<span class="motatrouver"> first word</span> without using <span class="motTaboo"> the others words</span>';
+$lang['beware_time']=' You can restart your recording as much as you want but beware, you are limited in time. If you don\'t send your recording, you loose the points from Oracle, but you get some points from Druide.';
 $lang['card_preview'] = 'Card Preview';
 $lang['id_describe'] = 'Here is your Card ID, send it to your friend so they can play with it ! ';
 $lang['unknown_id'] = 'Unreachable card: either the card does not exist in this language, or your are it\'s creator and therefor can\'t play with.';

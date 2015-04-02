@@ -6,10 +6,11 @@ include('./views/page.header.html');
 	<div id="jrForm">
 		<form class="form-jr" role="form" id="oracle.card.timeout" method="post" action="./">
 			<fieldset>
-					<legend class="form-jr-heading"><?php echo $lang['too_bad'];?></legend>
-						<dl>
-							<dt><label ><?php echo $lang['oracle_card_timeout'];?></label><dt>
-						</dl>
+					
+					<legend class="form-jr-heading" ><?php echo $lang['too_bad'];?></legend>
+					
+					<p style="font-family: playball;"><?php echo $lang['oracle_card_timeout'];?></p>
+						
 				<div id="form-cmd">
 					<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php echo $lang['return']; ?>" class="submit_buttons" />
 				</div>

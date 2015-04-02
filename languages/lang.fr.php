@@ -66,6 +66,7 @@ $lang['taboo_4'] = 'Mot Tabou 4';
 $lang['taboo_5'] = 'Mot Tabou 5';
 
 $lang['word_to_find'] = 'Mot à trouver';
+$lang["wordForbid"] = 'Mots interdits';
 $lang['word_direction'] = 'Choisissez votre niveau de difficulté: ';
 $lang['level_easy'] = 'Facile';
 $lang['level_medium'] = 'Moyen';
@@ -86,7 +87,10 @@ $lang['card_by_id'] = 'Carte par son Identifiant';
 
 // Description d'une carte : Oracle
 $lang['card_descr'] = 'Description d\'une carte';
-$lang['beware_time'] = 'Attention! tu as un temps limité !';
+$lang['description'] = 'Tu dois faire deviner aux autres joueurs  le<span class="motatrouver"> premier mot</span> sans dire les<span class="motTaboo"> autres mots.</span><br/>
+Tu recevras 10 points à la fin de ta description. Si elle n\'est pas validée par le Druide, tu les perdras. Si elle est validée mais que le Devin ne trouve pas le mot décrit, tu perdras 5 points.';
+
+$lang['beware_time']='Tu peux recommencer ton enregistrement à infini, mais ton temps est limité. Si tu décides de ne pas envoyer tu perderas des points d\'Oracle mais tu gagneras un peu de Druide';
 $lang['card_preview'] = 'Aperçu de votre carte';
 $lang['id_describe'] = 'Voici l\' identifiant de votre carte (ID), transmettez-le à vos amis pour qu\'ils jouent à votre carte ! ';
 $lang['unknown_id'] = 'Carte inaccessible: soit la carte n\'existe pas dans cette langue, soit vous en êtes le créateur et dans ce cas vous ne pouvez pas y jouer.';

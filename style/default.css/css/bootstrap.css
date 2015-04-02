@@ -6593,9 +6593,12 @@ button.close {
   padding: 15px;
   margin: 0 auto;
 }
-.form-jr .form-jr-heading,
+.form-jr .form-jr-heading{
+	 font-family: playball;
+}
 .form-jr .checkbox {
   margin-bottom: 10px;
+ 
 }
 .form-jr .checkbox {
   font-weight: normal;

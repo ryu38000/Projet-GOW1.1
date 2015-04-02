@@ -2,6 +2,7 @@
 $title = 'Oracle Description';
 include('./views/page.header.html');
 ?>
+
 <!--Popup Overlay -->
 <div id="facebox">
 	<div class="content">
@@ -14,63 +15,70 @@ include('./views/page.header.html');
 </div>
 <!-- Fin Popup -->
 <div id="main-container">
-	<div id="userid" data-userid="<?php echo $this->oracle; ?>" style="display:none"></div>
-	<div id="userlang" data-userlang="<?php echo $this->userlang; ?>" style="display:none"></div>
-	<div id="cardid" data-cardid="<?php echo $this->res['carteID']; ?>" style="display:none"></div>
-	<div id="levelcard" data-levelcard="<?php echo $this->res['nivcarte']; ?>" style="display:none"></div>
 	<div id="jrForm">
-		<form class="form-jr" role="form" id="description.carte" name="formSaisie" method="post" action="./index.php?mode=oracle.result">   
-					<?php if ( $this->errors ) { ?>
-					<fieldset class="errors">
-					<legend>Erreurs</legend>
-						<ul>
-						<?php foreach ( $this->errors as $error ) { ?>
-							<li>
-								<?php echo $error; ?>
-							</li>
-						<?php } ?>
-						</ul>
+		<div id="firstPage">
+			<?php if ( $this->errors ) { ?>
+			<fieldset class="errors">
+				<legend>Erreurs</legend>
+					<ul>
+					<?php foreach ( $this->errors as $error ) { ?>
+						<li>
+							<?php echo $error; ?>
+						</li>
 					<?php } ?>
-					</fieldset>
-					<fieldset>
-						<legend class="form-jr-heading"><?php echo $lang['card_descr']; ?></legend>
-						<dl>
-							<dt><label for="beware"><?php echo $lang['beware_time']; ?></label></dt>
-						</dl>
-						<dl>
-							<div id='card' >
-							</div>
-						</dl>
-						<h3><span id="countdown" class="timer"></span></h3>
-						<dl>
-							<h3><?php echo $lang['start_describe']; ?></h3>
-												    <p style="text-align:center;">
-						    <audio id="preview"></audio>
-						    </p>
-						    <hr />
-						    <div><img src="style/img/recording.png" alt="Recording" id="rec" style="float:left;width:35px;height:35px;margin-left:20px;margin-top:17px;visibility:hidden"></div>
-						    <div style="padding:20px;">
-						    <button class="btn btn-primary" id="record" type="button"><?php echo $lang['record']; ?></button> </br>
-						    <button class="btn btn-primary" id="stop" type="button" disabled><?php echo $lang['send_description']; ?></button></br>
-						    <button class="btn btn-primary" id="delete" type="button" disabled><?php echo $lang['erase']; ?></button>
-						    </div>
-						    <div id="container" style="padding:1em 2em;"></div>
-						</dl>
-						<dl> <p id="audiovide"></p></dl>
-						<div id="form-cmd"style="visibility: hidden">
-							<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" 
-							 name="submit_form" value="<?php echo $lang['validate']; ?>"/> 
-						</div>
-					</fieldset>
-			</form>
+					</ul>
+				<?php } ?>
+			</fieldset>
+				<div id="descr" style="font-family:Playball;font-style: normal;">
+					<legend class="form-jr-heading" style="text-align:center; font-style:bold;"><?php echo $lang['rules']; ?></legend>
+					<dl style="font-size:20px; padding:10px;">
+							<?php echo $lang['description']; ?>
+							<?php echo $lang['beware_time']; ?>
+					</dl>
+				</div><br/>
+					<center><table>
+						<tr>
+							<td><img src="style/default.css/imgs/recGris.png" alt="Recording" id="recD"></td>
+							<td><button class="btn btn-primary btn-lg btn-block" id="record" type="button" style="margin-left:10px;" ><?php echo $lang['record']; ?></button></td>
+						</tr>
+					</table><center>
+		</div>				
+		
+		<form class="form-jr" role="form" id="description.carte" name="formSaisie" method="post" action="./index.php?mode=oracle.result">   					
+		
+		<div id="secondPage">
+				
+				<div id='card'></div>
+				<center><table>
+				<tr> <th id="countdown" class="timer">
+					</th>
+				</tr>
+				</table></center> 	
+				<img src="style/default.css/imgs/recON.png" alt="Recording" id="rec" style="float:left;margin-left:30%">
+				<img src="style/default.css/imgs/restart.png" alt="restart" id="restart" style="float:left;margin-left:20px;margin-top:5px;">
+				<img src="style/default.css/imgs/valid.png" alt="valid" id="valid" style="float:left;margin-left:20px;margin-top:5px;">
+				<br/>				
+				<dl>
+					<p style="text-align:center;">
+					<audio id="preview"></audio>
+					</p>
+					<hr/>
+					<div id="container" style="padding:1em 2em;"></div>
+				</dl>
+				<dl> <p id="audiovide"></p></dl>
+				<div id="form-cmd"style="visibility: hidden"> <!-- CHECKKKKKK?! -->
+				
+				<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" 
+				 name="submit_form" value="<?php echo $lang['validate']; ?>"/> 
+			
 		</div>
+		 </form>
 	</div>
 </div>
 
 <!--
 	ici rajouter un message d'erreur quand aucune carte n'existe dans la langue de l'utilisateur
 -->
-
 <script>
 // au moment de l'appel à la méthode getUserMedia
 var recorder, recordVideo;
@@ -92,14 +100,29 @@ var recordIsOn;
 var audioStream;
 var fileName;	
 
+var seconds = 70;
+
+
 navigator.getUserMedia = navigator.getUserMedia       ||
 					   navigator.webkitGetUserMedia ||
 					   navigator.mozGetUserMedia    ||
 					   null;
+					   
+					   
+// JQUERY permettant d'afficher la bonne page selon l'action effectuée
+$("#secondPage").hide();
+
+$("#record").click(function() {
+$("#firstPage").hide( "slow");
+});					   
+
+//Bouton Rec qui clignote					   
+$("#rec").fadeOut(900).delay(500).fadeIn(900);								
+			   
 	
 // Timer
 // Intialisation du timerà 80 secondes, le popup étant de 10 secondes maximum.
-var seconds = 70;
+
 function secondPassed() {
     var minutes = Math.round((seconds - 30)/60);
     var remainingSeconds = seconds % 60;
@@ -148,7 +171,7 @@ function hideRecButton(){
 }
 
 
-record.onclick = function() {
+ record.onclick = function() {
 	
 	record.disabled = true;
 	if (!audioStream){
@@ -170,12 +193,17 @@ record.onclick = function() {
 				countdownTimer = setInterval('secondPassed()', 1000);
 				audioStream = stream;
 				
-				document.getElementById('card').innerHTML = "	<dt><label for='mot'><?php echo $lang['word_to_find'];?></label> : <?php echo $this->res['mot'].'</br>'; ?></dt>"+
-										"<dt><label for='tabou1'><?php echo $lang['taboo_1'];?></label> : <?php echo $this->res['tabou1'].'</br>'; ?></dt>"+
-										"<dt><label for='tabou2'><?php echo $lang['taboo_2'];?></label> : <?php echo $this->res['tabou2'].'</br>'; ?></dt>"+
-										"<dt><label for='tabou3'><?php echo $lang['taboo_3'];?></label> : <?php echo $this->res['tabou3'].'</br>'; ?></dt>"+
-										"<dt><label for='tabou4'><?php echo $lang['taboo_4'];?></label> : <?php echo $this->res['tabou4'].'</br>'; ?></dt>"+
-										"<dt><label for='tabou5'><?php echo $lang['taboo_5'];?></label> : <?php echo $this->res['tabou5'].'</br>'; ?></dt>";
+
+				$("#secondPage").show("slow");
+
+				document.getElementById('card').innerHTML ="<table class=\"table table-hover\" style=\"text-align:center;\"><thead><tr><td title='<?php echo $lang["word_to_find"] ?>'><p><?php echo $this->res['mot']; ?><p></td></tr></thead>"+
+										"<tbody style=\"background-color:#F8E1E8;\" title='<?php echo $lang["wordForbid"] ?>'>"+
+										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou1'].'</p></br>'; ?></td></tr>"+
+										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou2'].'</p></br>'; ?></td></tr>"+
+										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou3'].'</p></br>'; ?></td></tr>"+
+										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou4'].'</p></br>'; ?></td></tr>"+
+										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou5'].'</p></br>'; ?></td></tr></tbody></table>";
+										
 				actionToDo(audioStream);
 
 			}
@@ -370,7 +398,8 @@ function menu(){
 document.location.href="index.php"
 }
 
-        </script>
+</script>
+
 	
 <?php
 include('./views/page.footer.html');
