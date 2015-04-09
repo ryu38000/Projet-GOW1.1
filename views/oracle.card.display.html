@@ -15,6 +15,10 @@ include('./views/page.header.html');
 </div>
 <!-- Fin Popup -->
 <div id="main-container">
+	<div id="userid" data-userid="<?php echo $this->oracle; ?>" style="display:none"></div>
+	<div id="userlang" data-userlang="<?php echo $this->userlang; ?>" style="display:none"></div>
+	<div id="cardid" data-cardid="<?php echo $this->res['carteID']; ?>" style="display:none"></div>
+	<div id="levelcard" data-levelcard="<?php echo $this->res['nivcarte']; ?>" style="display:none"></div>
 	<div id="jrForm">
 		<div id="firstPage">
 			<?php if ( $this->errors ) { ?>
@@ -42,12 +46,11 @@ include('./views/page.header.html');
 							<td><button class="btn btn-primary btn-lg btn-block" id="record" type="button" style="margin-left:10px;" ><?php echo $lang['record']; ?></button></td>
 						</tr>
 					</table><center>
-		</div>				
-		
-		<form class="form-jr" role="form" id="description.carte" name="formSaisie" method="post" action="./index.php?mode=oracle.result">   					
+		</div>						   					
+ <form class="form-jr" role="form" id="description.carte" name="formSaisie" method="post" action="./index.php?mode=oracle.result">
 		
 		<div id="secondPage">
-				
+                                <legend class="form-jr-heading" style="text-align:center; font-style:bold;"><?php echo $lang['card_description']; ?></legend>
 				<div id='card'></div>
 				<center><table>
 				<tr> <th id="countdown" class="timer">
@@ -55,36 +58,45 @@ include('./views/page.header.html');
 				</tr>
 				</table></center> 	
 				<img src="style/default.css/imgs/recON.png" alt="Recording" id="rec" style="float:left;margin-left:30%">
-				<img src="style/default.css/imgs/restart.png" alt="restart" id="restart" style="float:left;margin-left:20px;margin-top:5px;">
-				<img src="style/default.css/imgs/valid.png" alt="valid" id="valid" style="float:left;margin-left:20px;margin-top:5px;">
+				<button type="button" id='restart' title="restart recording"  class="btn btn-default"><img src="style/default.css/imgs/restart.png" alt="restart" id="restart now" style="float:left;"></button>
+				<button type="button"  id="valid" title = "send recording"  class="btn btn-default"><img src="style/default.css/imgs/valid.png" alt="valider" id="valider" style="float:left;"></button>
 				<br/>				
-				<dl>
-					<p style="text-align:center;">
-					<audio id="preview"></audio>
-					</p>
-					<hr/>
-					<div id="container" style="padding:1em 2em;"></div>
-				</dl>
-				<dl> <p id="audiovide"></p></dl>
-				<div id="form-cmd"style="visibility: hidden"> <!-- CHECKKKKKK?! -->
-				
-				<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" 
-				 name="submit_form" value="<?php echo $lang['validate']; ?>"/> 
-			
+		</div>			
+		<div id="thirdPage">
+					
+					<dl>
+						<p style="text-align:center;">
+						<audio id="preview"></audio>
+						</p>
+						<hr/>
+						<div id="container"></div>
+					</dl>
+					<dl> <p id="audiovide"></p></dl>
+					<div id="form-cmd"style="visibility: hidden;text-align:center;" >
+               				      <button type="submit" class="btn btn-danger" id="abandon_form" 
+                                               name="abandon_form" title="Erase recording"><?php echo $lang['abandonner'];?></button>
+				 		
+						<button class="btn btn-success" type="submit" id="submit_form" title="Save recording" 
+						 name="submit_form" style="margin-left:3%;"><?php echo $lang['validate'];?></button> 
+					</div>
 		</div>
-		 </form>
-	</div>
+		</form>
+	</div>			
 </div>
 
 <!--
 	ici rajouter un message d'erreur quand aucune carte n'existe dans la langue de l'utilisateur
 -->
+<audio class="audioDemo" controls preload="none" style="visibility:hidden;"> 
+   <source src="audio/test.mp3" type="audio/mpeg">
+</audio>
+
 <script>
 // au moment de l'appel à la méthode getUserMedia
 var recorder, recordVideo;
 var record = document.getElementById('record');
-var stop = document.getElementById('stop');
-var deleteFiles = document.getElementById('delete');
+var valid = document.getElementById('valid');
+var restartRecord = document.getElementById('restart');
 
 var recButton;
 var audio = document.querySelector('audio');
@@ -100,7 +112,7 @@ var recordIsOn;
 var audioStream;
 var fileName;	
 
-var seconds = 70;
+var seconds = 15;
 
 
 navigator.getUserMedia = navigator.getUserMedia       ||
@@ -114,50 +126,55 @@ $("#secondPage").hide();
 
 $("#record").click(function() {
 $("#firstPage").hide( "slow");
+});
+
+
+$("#valid").click(function(){
+	$("#secondPage").hide("slow");
+	$("#thirdPage").show("slow");
 });					   
+
+//Indispensable si nous ne gardons pas l'enregistrement!
+$("#abandon_form").click(function(){ 
+deleteAudioVideoFiles();	
+});
+
+
+
 
 //Bouton Rec qui clignote					   
 $("#rec").fadeOut(900).delay(500).fadeIn(900);								
 			   
-	
-// Timer
-// Intialisation du timerà 80 secondes, le popup étant de 10 secondes maximum.
+
+  
+function warning(){
+	 var randomColorChange = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+	$('.timer').css('background-color', randomColorChange);
+}   
+
 
 function secondPassed() {
     var minutes = Math.round((seconds - 30)/60);
     var remainingSeconds = seconds % 60;
+
     if (remainingSeconds < 10) {
         remainingSeconds = "0" + remainingSeconds;  
-    }
+    	var warn=setInterval('warning()', 300);
+
+	}
     document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
     if (seconds == 0) {
         clearInterval(countdownTimer);
-	
+	$(".audioDemo").trigger('play');
         document.getElementById('countdown').innerHTML = "Trop Tard !";
-        document.getElementById("rec").style.visibility="hidden";
-        document.getElementById('form-cmd').style.visibility="visible"; 
-		
-		if(fileName){
-			if(deleteFiles.disabled === true){
-				stop.disabled = true;
-				record.disabled = true;
-				deleteFiles.disabled = true;
-			}
-			else{
-				stop.disabled = true;
-				record.disabled = true;
-				deleteFiles.disabled = true;
-			}
-		}
-		else{
-		document.location.href="index.php?mode=oracle.timeout";
-//			menu();
-		}
-	
+	saveFile();
+	 $("#secondPage").hide("slow");
+        $("#thirdPage").show("slow");	
     } else {
         seconds--;
     }
 }
+
 
 
 function hideRecButton(){
@@ -171,31 +188,41 @@ function hideRecButton(){
 }
 
 
- record.onclick = function() {
+record.onclick = function() {
 	
 	record.disabled = true;
+	
 	if (!audioStream){
 		navigator.getUserMedia({
-		audio: true,
-	},
-
+			audio: true,
+			video: false,
+		},
 		function(stream) {
             
-            if (window.IsChrome) stream = new window.MediaStream(stream.getAudioTracks());
+            if (window.IsChrome){
+				 stream = new window.MediaStream(stream.getAudioTracks());
+            }
             
 			if (stream.getAudioTracks().length === 0) {
 					console.log('you have no webcam nore mic available on your device');
 			}
-			
 			else {
 				
-				// continuer les actions
-				countdownTimer = setInterval('secondPassed()', 1000);
+				//webRTC
 				audioStream = stream;
 				
-
+				recorder = window.RecordRTC(stream, {
+					type:"audio",
+					//leftChannel:'false',
+				    onAudioProcessStarted: function() {
+					document.getElementById("rec").style.visibility="visible";
+					recButton = setInterval('hideRecButton()', 500);
+					}
+				});
+				actionToDo(stream);
+				//Gestion de la carte
+				countdownTimer = setInterval('secondPassed()', 1000);
 				$("#secondPage").show("slow");
-
 				document.getElementById('card').innerHTML ="<table class=\"table table-hover\" style=\"text-align:center;\"><thead><tr><td title='<?php echo $lang["word_to_find"] ?>'><p><?php echo $this->res['mot']; ?><p></td></tr></thead>"+
 										"<tbody style=\"background-color:#F8E1E8;\" title='<?php echo $lang["wordForbid"] ?>'>"+
 										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou1'].'</p></br>'; ?></td></tr>"+
@@ -204,7 +231,6 @@ function hideRecButton(){
 										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou4'].'</p></br>'; ?></td></tr>"+
 										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou5'].'</p></br>'; ?></td></tr></tbody></table>";
 										
-				actionToDo(audioStream);
 
 			}
 		},
@@ -215,7 +241,7 @@ function hideRecButton(){
 		});
 	}
 	else{	
-		actionToDo(audioStream);
+		actionToDo(stream);
 		}
 		
 }
@@ -226,50 +252,37 @@ function actionToDo (stream){
 	preview.muted = true;
 
 	
-	recorder = RecordRTC(stream, {
-
-		   onAudioProcessStarted: function() {
-		   document.getElementById("rec").style.visibility="visible";
-		   recButton = setInterval('hideRecButton()', 500);
-
-		}
-	});
+	//~ recorder = RecordRTC(stream, {
+//~ 
+		   //~ onAudioProcessStarted: function() {
+		   //~ document.getElementById("rec").style.visibility="visible";
+		   //~ recButton = setInterval('hideRecButton()', 500);
+//~ 
+		//~ }
+	//~ });
 
 	recorder.startRecording();
-	stop.disabled = false;
+	//stop.disabled = false;
 
 
-	stop.onclick = function() {
-		document.getElementById('form-cmd').style.visibility="visible"; 
-		record.disabled = true;
-		stop.disabled = true;
-		clearInterval(recButton);
-		document.getElementById("rec").style.visibility="hidden";
-		
-		preview.src = '';
+	valid.onclick = function() {
+		saveFile();
+		clearInterval(countdownTimer);
 
-		fileName = 'oracle' + Math.round(Math.random() * 999999) + 1;
-
-			
-			recorder.stopRecording(function(url) {
-				preview.src = url;
-				PostBlob(recorder.getBlob(), 'audio', fileName + '.wav');
-			});
-
-		deleteFiles.disabled = false;
 	};
+	
+	restartRecord.onclick = function(){
+		deleteAudioVideoFiles;
+         actionToDo(audioStream);
+		recorder.startRecording();
 
-	deleteFiles.onclick = function() {
-		document.getElementById('form-cmd').style.visibility="hidden";
-		deleteAudioVideoFiles();
-		record.disabled = false;
 	};
 
 
 }
 
 function deleteAudioVideoFiles() {
-	deleteFiles.disabled = true;
+	//deleteFiles.disabled = true;
 	if (!fileName) return;
 	var formData = new FormData();
 	formData.append('delete-file', fileName);
@@ -277,7 +290,7 @@ function deleteAudioVideoFiles() {
 		console.log(response);
 	});
 	fileName = null;
-	container.innerHTML = '';
+	container.innerHTML = '';	
 }
 
 function popUp(){
@@ -313,6 +326,60 @@ function popUp(){
 	}, 10000);
 	}); 
 }
+
+function saveFile(){
+                document.getElementById('form-cmd').style.visibility="visible";
+                //record.disabled = true;
+                //stop.disabled = true;
+                clearInterval(recButton);
+                document.getElementById("rec").style.visibility="hidden";
+                preview.src = '';
+
+                fileName = 'oracle' + Math.round(Math.random() * 999999) + 1;
+
+
+				recorder.stopRecording(function(url) {
+					
+					preview.src=url;
+				   var fileReader = new FileReader();
+				   fileReader.onload = function(event) {
+					   var newBlob = new Blob([event.target.result], {type:"audio/ogg", endings:"native"});
+					   //~ POST_using_XHR( newBlob );
+					   PostBlob(newBlob, 'audio', fileName + ".ogg");
+
+				   };
+				   fileReader.readAsArrayBuffer(recorder.blob);
+				});
+//~ 
+                        //~ recorder.stopRecording(function(url) {
+                                //~ preview.src = url;
+				//~ var extension=".ogg";
+				//~ if(!isChrome){
+					//~ extension = ".ogg";
+				//~ }
+	                         //~ PostBlob(recorder.getBlob(), 'audio', fileName + extension);
+				//~ // PostBlob(recorder.blob(), 'audio', fileName + '.mp3');
+                        //~ });
+
+
+//~ 
+                        //~ recorder.stopRecording(function(url) {
+                                //~ preview.src = url;
+				//~ var extension=".ogg";
+				//~ if(!isChrome){
+					//~ extension = ".ogg";
+				//~ }
+	                         //~ PostBlob(recorder.getBlob(), 'audio', fileName + extension);
+				//~ // PostBlob(recorder.blob.mozSlice(), 'audio', fileName + '.mp3');
+                        //~ });
+
+                //deleteFiles.disabled = false;
+
+}
+
+
+
+
 // Enregistrement d'un fichiers audio .wav sur le serveur
 
 // PostBlob method uses XHR2 and FormData to submit 
@@ -322,6 +389,8 @@ function PostBlob(blob, fileType, fileName) {
 	var formData = new FormData();
 	formData.append(fileType + '-filename', fileName);
 	formData.append(fileType + '-blob', blob);
+
+	console.log(blob,"ici");
 
 	// progress-bar
 	var hr = document.createElement('hr');
@@ -342,13 +411,14 @@ var levelcard = $("#levelcard").attr("data-levelcard");
 
 	// POST the Blob using XHR2
 xhr('save.php?userid="'+userid+'"&userlang="'+userlang+'"&cardid="'+cardid+'"&levelcard="'+levelcard+'"', formData, progress, percentage, function(fileURL) {
+		console.log("POST!!!");
 		container.appendChild(document.createElement('hr'));
 
 		var mediaElement = document.createElement(fileType);
 
 		var source = document.createElement('source');
 		var href = location.href.substr(0, location.href.lastIndexOf('/') + 1);
-		source.src = href + fileURL;
+		source.src = href + fileURL;  //enregistrements/oracle9794261.mp3
 
    if (fileType == 'audio') source.type = 'audio/mp3';
 
@@ -375,20 +445,41 @@ function xhr(url, data, progress, percentage, callback) {
 		}
 	};
 
+	// TODO : si firefox alors addeventlistener ; si chrome alors onloadstart/progress/load
+
+	
 	if (url.indexOf('delete.php') == -1) {
-	request.upload.onloadstart = function() {
-		percentage.innerHTML = 'Upload started...';
-	};
+		if(!isChrome){
+			request.upload.addEventListener("loadstart", function() {	
+			percentage.innerHTML = 'Upload started...';
+			},false);
+	
+		     request.upload.addEventListener("progress", function(event){
+                      progress.max = event.total;
+                      progress.value = event.loaded;
+                      percentage.innerHTML = 'Upload Progress ' + Math.round(event.loaded / event.total * 100) + "%"; },false);
+	
+	      request.upload.addEventListener("load",function(){
+                      percentage.innerHTML = 'Saved!';
+              },false);
 
-	request.upload.onprogress = function(event) {
-		progress.max = event.total;
-		progress.value = event.loaded;
-		percentage.innerHTML = 'Upload Progress ' + Math.round(event.loaded / event.total * 100) + "%";
-	};
+		
+		}
+		else {
+			request.upload.onloadstart = function() {
+			percentage.innerHTML = 'Upload started...';
+			};
+			        request.upload.onprogress = function(event) {
+        		        progress.max = event.total;
+        		        progress.value = event.loaded;
+               			 percentage.innerHTML = 'Upload Progress ' + Math.round(event.loaded / event.total * 100) + "%";
+       				 };
+			request.upload.onload = function() {
+        	        percentage.innerHTML = 'Saved!';
+	       		 };
 
-	request.upload.onload = function() {
-		percentage.innerHTML = 'Saved!';
-	};
+		}
+	
 	}
 
 	request.open('POST', url);

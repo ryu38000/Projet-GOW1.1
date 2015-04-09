@@ -163,7 +163,13 @@ class diviner_game
 			{
 				$partieok=false;
 			}
-
+/////////////////////////////////////////////////////////////////////////////////////////////////		
+			//On vérifie ici que l'enregistrement est bien sur le serveur
+			if (!file_exists($this->adresse)){
+				$partieok=false;
+			} 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+	
 			// si rien de s'oppose à  ce que l'enregistrement soit proprosé
 			if ($partieok)
 			{

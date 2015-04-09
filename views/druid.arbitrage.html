@@ -24,8 +24,8 @@ include('./views/page.header.html');
 						<dt><label for="beware"><?php echo $lang['listen']; ?></label></dt>
          
 						<?php echo "chemin_enregistrement: ".$this->raisin['cheminEnregistrement']."\n";?> <!-- à retirer après les tests-->
-						<dt><?php echo $lang['card_oracle'];?> : <?php echo $this->res2['username'].'</br>'; ?></dt>
-						<dt><?php echo $lang['card_level'];?> : <?php echo $this->raisin['nivcarte'].'</br>'; ?></dt>
+						<dt><?php if (isset ($this->res2['username'])){ echo $lang['card_oracle'];?> : <?php echo $this->res2['username'].'</br>'; }?></dt>
+						<dt><?php if (isset ( $this->raisin['nivcarte'])){ echo $lang['card_level'];?> : <?php echo $this->raisin['nivcarte'].'</br>'; } ?></dt>
 						
 					<!-- 	<script language="Javascript"> function bascule() </script> -->
 					</dl>

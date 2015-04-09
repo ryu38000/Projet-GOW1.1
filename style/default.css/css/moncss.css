@@ -1,0 +1,44 @@
+.motatrouver{
+	color : green;
+	font-style : italic;
+}
+.motTaboo{
+	color : red;
+	font-style : italic;
+}
+
+#card tbody td p{
+	float:left;   
+	margin-left: 10%;
+	font-family: playball;
+	font-size:20px;
+}
+
+#card thead td p{
+	font-family: playball;
+	font-size: 25px;
+	font-style: normal;
+	background-color:#CFFFCD;
+	border-radius:15px; 
+	text-align:center;
+
+}
+#card {
+	box-shadow: 10px 10px 5px #888888;
+}
+
+.timer{
+	border-radius:15px; 
+	font-style:bold;
+	font-align:center;
+	width:5px;padding-top:10px;
+	padding-bottom:10px;
+	padding-left:40px;
+	padding-right:40px; 
+	background-color:#FF5757; 
+}
+.messageUtil{
+	font-family: playball;
+	font-size : 20px;
+}
+

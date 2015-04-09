@@ -13,7 +13,9 @@ class oracle_result
 	private $previousSG = 0;
 	private $previousSO = 0;
 	private $points = 10;
+	private $pointsDruide = 5;
 	private $result = '';
+	private $pointsPerdus = false;
 
 	public function set_mode($mode)
 	{
@@ -44,8 +46,10 @@ class oracle_result
 	{
 
 		// si on a cliqué sur "valider"
-		$this->submit = isset($_POST['submit_form']);
-		if ( $this->submit )
+		//$this->submit = isset($_POST['submit_form']);
+		//$this->submit = isset($_POST['abandon_form'] 
+
+		if ( isset($_POST['submit_form']) )
 		{
 
 			//récupération du score précédent
@@ -66,6 +70,39 @@ class oracle_result
 			$sql = 'UPDATE score 
 			SET  scoreGlobal='.$db->escape((string) $this->previousSG) . ', ' .
 				'scoreOracle='.$db->escape((string) $this->previousSO) . '
+			WHERE userid='.$this->oracle.'';
+
+			$db->query($sql);
+		}
+		else{
+			//récupération du score précédent
+			$db = db::getInstance();
+			$sql = 'SELECT `scoreGlobal`,`scoreOracle`, `scoreDruide` FROM `score` WHERE `userid`="'.$this->oracle.'"';
+			$result=$db->query($sql);
+			$res2= mysqli_fetch_assoc($result);
+
+			$this->previousSG= $res2['scoreGlobal'];
+			$this->previousSO= $res2['scoreOracle'];
+			$this->previousSD= $res2['scoreDruide'];		
+
+			//maj des variables de scores:
+			if($this->previousSG>=$this->points){
+				$this->previousSG-= $this->points;
+				if($this->previousSO>=$this->points){
+					$this->previousSO-= $this->points;
+				}
+				$this->previousSG+= $this->pointsDruide; //On ne met pas de points Druide si le score globale est égal à 0 (trop facile sinon)
+				$this->previousSD+= $this->pointsDruide;
+				$this->pointsPerdus = true;
+			}
+
+
+			//maj du score dans la BD
+			$db = db::getInstance();
+			$sql = 'UPDATE score 
+			SET  scoreGlobal='.$db->escape((string) $this->previousSG) . ', ' .
+				'scoreOracle='.$db->escape((string) $this->previousSO) . ','.
+				'scoreDruide='.$db->escape((string) $this->previousSD) . '
 			WHERE userid='.$this->oracle.'';
 
 			$db->query($sql);

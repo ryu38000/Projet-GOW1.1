@@ -15,6 +15,7 @@ class druid_arbitrage
 	private $mode = '';
 	private $adresse = '';
 	private $oracle = '';
+	private $enregistrement='';
 	
 	private $previousSGO = 0;
 	private $previousSO = 0;
@@ -61,12 +62,25 @@ class druid_arbitrage
 		//connexion à la BD
 		$db = db::getInstance();
 		
+
 			// récupération d'un enregistrement au hasard
+			$partie=false;
 			
+			while($partie == false){
 			$sql = 'SELECT 
 			enregistrementID,cheminEnregistrement,idOracle,carteID,nivcarte 
 			FROM enregistrement WHERE idOracle!='.$this->druid.' AND OracleLang="'.$this->userlang.'" AND RAND() > 0.9  ORDER BY RAND() LIMIT 1';	    
-        $this->result=$db->query($sql);
+        		 $this->result=$db->query($sql);
+        		 $this->raisin= mysqli_fetch_assoc($this->result);
+        		 
+        		$this->enregistrement = "enregistrements/".$this->raisin['cheminEnregistrement'];
+			
+				//On vérifie ici que l'enregistrement est bien sur le serveur
+				if (file_exists($this->enregistrement)){
+					$partie=true;
+				}
+			}
+       
 	
 		//~ //la requete récupère un enregistrement au hasard et vérifie si cet enregistrement
 		//~ //est déjà vu par le druide
@@ -94,7 +108,7 @@ class druid_arbitrage
 		// //}
 		
 		
-        $this->raisin= mysqli_fetch_assoc($this->result);
+        
 	
 		#if(!(isset($_SESSION['enregistrementID']))){
 		#	$_SESSION['enregistrementID'] = $this->raisin["enregistrementID"];

@@ -57,6 +57,8 @@ $lang['start_describe'] = 'Start your description :';
 $lang['record'] = 'Play';
 $lang['send_description'] = 'Send your description !';
 $lang['erase'] = 'Erase and restart';
+$lang['giveUp']=' You did not send your record, Therefore you will loose 10 points as Oracle but you will get 5 points as Druide'; 
+$lang['giveUpWithoutPoints'] = 'You did not send your record. But you have not enought points to loose. So you don\'t loose points for this time... Be carefull the next time ;)';
 
 // Affichage des cartes en création et lecture : Oracle | Druide | Devin
 $lang['taboo_1'] = 'Word Taboo 1';
@@ -92,7 +94,7 @@ $lang['beware_time']=' You can restart your recording as much as you want but be
 $lang['card_preview'] = 'Card Preview';
 $lang['id_describe'] = 'Here is your Card ID, send it to your friend so they can play with it ! ';
 $lang['unknown_id'] = 'Unreachable card: either the card does not exist in this language, or your are it\'s creator and therefor can\'t play with.';
-
+$lang['abandonner']='Give up';
 //Arbitrage d'une description : Druide
 $lang['arbitrage'] = 'Description Arbitration';
 $lang['listen'] = 'Listen carefully to the Oracle description. Did he used taboo words?';

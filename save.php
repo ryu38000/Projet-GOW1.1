@@ -5,7 +5,7 @@
 	//~ session_start();
 	$connect=new mysqli("localhost","tab","innovatab$1","tab");
 
-	//foreach(array('audio') as $type) {
+	foreach(array('audio') as $type) {
 		if (isset($_FILES["audio-blob"])) {
 			echo 'enregistrements/';
 			$fileName = $_POST["audio-filename"];
@@ -27,14 +27,20 @@
 		// récupère dans un tableau de hachage le nom du fichier sans l'extension, l'extension et le chemin
 		$file = pathinfo('./enregistrements/'.$fileName.''); 
 		
-		echo $file['filename'].".mp3";
+		//echo $file['filename'].".mp3";
+		
+				echo $file['filename'].".mp3";
+
+		
 		
 		// convertit en mp3
-		exec("avconv -i ./enregistrements/".$file['filename'].".wav -acodec libmp3lame ./enregistrements/".$file['filename'].".mp3"); 
 		
+			exec("avconv -i ./enregistrements/".$file['filename'].".wav -acodec libmp3lame ./enregistrements/".$file['filename'].".mp3"); 
+			exec("avconv -i ./enregistrements/".$file['filename'].".ogg -acodec libmp3lame ./enregistrements/".$file['filename'].".mp3"); 
 		// Supression du fichier.wav du serveur.
-		exec("rm ./enregistrements/".$file['filename'].".wav"); 
 		
+			exec("rm ./enregistrements/".$file['filename'].".ogg"); 
+			exec("rm ./enregistrements/".$file['filename'].".wav"); 
 		// ajout 15/02
 		//$_SESSION['userid']=$userid;
 		
@@ -58,7 +64,7 @@
 
 			$connect->query($sql);
 		}
-	//}
+	}
 	
 	//fonction pour protéger les caractères qui doivent l'être dans la requête sql
 	function escape($str, $con)

@@ -57,7 +57,8 @@ $lang['start_describe'] = 'Commence ta description :';
 $lang['record'] = 'Jouer';
 $lang['send_description'] = 'Envoie ta description !';
 $lang['erase'] = 'Efface et recommence';
-
+$lang['giveUp']='Vous n\'avez pas fourni l\'enregistrement; Vous allez donc être sanctionné de 10 points en tant qu\'Oracle, mais pour vous encourager nous vous gratifions de 5 points Druide.';
+$lang['giveUpWithoutPoints'] = 'Vous n\'avez pas fourni d\'enregistrement. Vous n\'êtes cependant pas sanctionné puisque le score global est ègal à 0. Mais gare à vous la prochaine fois.';
 // Affichage des cartes en création et lecture : Oracle | Druide | Devin
 $lang['taboo_1'] = 'Mot Tabou 1';
 $lang['taboo_2'] = 'Mot Tabou 2';
@@ -89,7 +90,7 @@ $lang['card_by_id'] = 'Carte par son Identifiant';
 $lang['card_descr'] = 'Description d\'une carte';
 $lang['description'] = 'Tu dois faire deviner aux autres joueurs  le<span class="motatrouver"> premier mot</span> sans dire les<span class="motTaboo"> autres mots.</span><br/>
 Tu recevras 10 points à la fin de ta description. Si elle n\'est pas validée par le Druide, tu les perdras. Si elle est validée mais que le Devin ne trouve pas le mot décrit, tu perdras 5 points.';
-
+$lang['abandonner']='Abandonner';
 $lang['beware_time']='Tu peux recommencer ton enregistrement à infini, mais ton temps est limité. Si tu décides de ne pas envoyer tu perderas des points d\'Oracle mais tu gagneras un peu de Druide';
 $lang['card_preview'] = 'Aperçu de votre carte';
 $lang['id_describe'] = 'Voici l\' identifiant de votre carte (ID), transmettez-le à vos amis pour qu\'ils jouent à votre carte ! ';
