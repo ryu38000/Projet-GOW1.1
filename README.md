@@ -1,7 +1,7 @@
 Game of Words
 ================
 
-Game of Words was created as part of the GAMER work package in the Innovalangues project at Stendhal University in Grenoble, France. Innovalangues is the only language oriented project within IDEFI (Initiatives in Excellence for Innovative Education) and will run from 2012 to 2018. This first version of Game of Words was designed and developed by two students of linguistics in the Language Industries master's program, Chloé Cimpello and Justine Reverdy, for their end-of-study professional project. Initially conceived for learners of French and with a few less fonctionnalities English, the Innovalanges project hopes to adapt Game od Words for additional languages.
+Game of Words was created as part of the GAMER work package in the Innovalangues project at Stendhal University in Grenoble, France. Innovalangues is the only language oriented project within IDEFI (Initiatives in Excellence for Innovative Education) and will run from 2012 to 2018. This first version of Game of Words was designed and developed based on an GAMER idea by two students of computer linguistics in the Language Industries master's program, Chloé Cimpello and Justine Reverdy, for their end-of-study professional project. Initially conceived for learners of French and with a few less fonctionnalities English, the Innovalanges project hopes to adapt Game od Words for additional languages.
 
 Rules
 -------
@@ -16,11 +16,13 @@ Requirements
 -------------
 * Apache Server with PHP 5.3+
 * MySQL
-* Chrome
 * Javascript activated
 
-Contributors
---------------
-Nejat Maryam
-Graceffa David
+For more information, contact Innovalangues to ask for the developper documentation.
 
+Contributors
+------------
+* Chloé Cimpello — 1st version
+* Justine Reverdy — 1st version
+* David Graceffa — 2nd version
+* Maryam Nejat — 2nd version
