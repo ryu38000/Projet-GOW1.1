@@ -32,12 +32,18 @@ function OracleRecorder(recordRTCOptions){
 
 	this.onMikeError = function(callback){
 		//a fuction called, when the microphone is not shared
-		self.mikeError = callback ;
+		self.mikeError = function(){
+			callback() ;
+			self.recorder = false;
+		}
 	};
 
 //actual processes
 	this.startRecording = function(){
-		if(self.stream !== false){
+		if(self.recorder !== false){
+			//would have tested with self.stream,
+			//but the stream exists even if it is reset in mikeError
+			//there might be leftover streams in memory
 			self.startRecordingSuccess();
 			self.recorder.startRecording();
 		}
