@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <style type="text/css">
+        #countdown{
+            text-align: center;
+            padding: 1em;
+        }
+        #image{
+            width:32px;
+        }
+        button[type=button] {
+            padding:0;
+            margin-right: 0.5rem;
+            margin-top: 0.3rem;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+            background-color: white;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            -webkit-box-shadow: 0px 2px 0px rgba(175,175,175,1), 0px 2px 3px rgba(0,0,0,.7);
+            -moz-box-shadow: 0px 2px 0px rgba(175,175,175,1), 0px 2px 3px rgba(0,0,0,.7);
+            box-shadow: 0px 2px 0px rgba(175,175,175,1), 0px 2px 3px rgba(0,0,0,.7);
+
+            -webkit-transition: all .1s ease;
+            -moz-transition: all .1s ease;
+            -ms-transition: all .1s ease;
+            -o-transition: all .1s ease;
+            transition: all .1s ease;
+        }
+
+        button[type=button]:active {
+            -webkit-box-shadow: 0px 1px 0px rgba(175,175,175,1), 0px 1px 2px rgba(0,0,0,.9);
+            -moz-box-shadow: 0px 1px 0px rgba(175,175,175,1), 0px 1px 2px rgba(0,0,0,.9);
+            box-shadow: 0px 1px 0px rgba(175,175,175,1), 0px 1px 2px rgba(0,0,0,.9);
+            position: relative;
+            top: 2px;
+        }
+
+        </style>
+        <!-- librairies -->
+        <script type="text/javascript" src="lib/jquery-1.11.2.min.js"></script>
+        <script type="text/javascript" src="lib/RecordRTC.min.js"></script>
+        <!-- controllers -->
+        <script type="text/javascript" src="controllers/oracle.recorder.js"></script>
+        <script type="text/javascript" src="controllers/timer.js"></script>
+        <!-- code spécifique -->
+        <script type="text/javascript" src="codeSpecifique.js"></script>
+    </head>
+    <body>
+        <!--RecordRTC-->
+        <button type="button" id='rec_stop'><img id="image" src="record.png" /></button>
+
+        <audio id="audio" autoplay controls></audio>
+
+        <!-- Timer -->
+        <span id="countdown">Prêt?</span>
+
+        <p id="blob"></p>
+
+    </body>
+
+</html>
