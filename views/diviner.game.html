@@ -1,40 +1,89 @@
+<script type="text/javascript" src="controllersJS/popup.js"></script>
+<script type="text/javascript" src="controllersJS/timer.js"></script>
+
 <?php $title = 'Devin';
 include('./views/page.header.html');
 ?>
+<script>
+// Timer
+
+//Initialisation du chrono
+function renders(minutes, seconds){
+	if(seconds == Math.floor(seconds)){
+		if (seconds < 10){
+			seconds = "0" + seconds;  
+		}
+		$('#countdown').html(minutes + ":" + seconds);
+	}
+}
+function pressurise(){
+	$('#countdown').css('background-color', '#'+(Math.random()*0xFFFFFF<<0).toString(16));
+}
+
+	function finChrono(){
+		document.location.href="index.php?mode=diviner.timeout"
+		if(!monChrono.isRunning()){
+			$('#countdown').css('background-color', 'white');
+			$('#countdown').html("Buzz Buzz");
+		}
+	}
+
+
+var monChrono = new MyTimer(renders, <?php echo $this->time; ?>, finChrono, 10,pressurise);
+
+</script>
 <div id="main-container">
 	<div id="jrForm">
 		<div class="form-jr">
-				 <?php if ( $this->errors ) { ?>
+
+				 <?php 
+				 //Si l'utilisateur a quitté la partie précédente
+				 if ( $this->lang ) {
+				 	foreach ($this->lang as $mess){
+				 	?>
+				 	<!--Popup Overlay -->
+					<div id="facebox">
+						<div class="content">
+							<div style="padding:5px;">
+								<h2><?php echo $lang['Becareful']; ?></h2><br/><h3><?php echo $lang[$mess]; ?></h3> 
+								<button class="close" style="cursor: pointer; background:#000; color:white; text-align:center; font-weight:bold; position:absolute; bottom:20%; left:50%; padding:0 2px; width:200px; height:30px; line-height:20px">OK</button>
+								<div class="resume">&nbsp;</div>
+							</div>
+						</div>
+					</div>
+					<!-- Fin Popup -->
+				 	<?php
+				 	}
+				 	?> 
+				 	<script>popUp();</script>
+				<?php
+				 } 
+				// S'il y a des erreurs dans la class diviner.class.php	
+				 if ( $this->errors ) { 
+				 ?>
 				<fieldset class="errors">
 				<legend>Erreurs</legend>
 					<ul>
 					<?php foreach ( $this->errors as $error ) { ?>
 						<li>
-							<?php echo $error; ?>
+							<?php
+								 echo $lang[$error]; ?>
 						</li>
-					<?php } ?>
+					
 					</ul>
 				</fieldset>  
-				<?php }
-			
-		
-				if($this->lang){
-					 foreach ( $this->lang as $mess ) { 
-  				?> 
-				<script type="text/javascript">
-					 var mess = "<?php echo $lang[$mess]; ?>" ;
-					 alert (mess);
-				 </script>
-				<?php }	}
-				 if( $this->getcarteValide() ){
-				 ?> 
+				<?php } 
+				}
+				else { 
+				?>
+				<script>monChrono.start();</script>
 				<fieldset>
 					<legend class="form-jr-heading"><?php echo $lang['listen_diviner']; ?></legend>
 					<dl>
 						<dl>
-							<dt><label for="carteID"><?php echo $lang['id_card'];?></label> : <?php echo  $this->raisin['carteID'].'</br>'; ?></dt>
-							<dt><label for="createur"><?php echo $lang['card_creator'];?></label> : <?php echo $this->res4['username'].'</br>'; ?></dt>
-							<dt><label for="oracle"><?php echo $lang['card_oracle'];?></label> : <?php echo $this->res2['username'].'</br>'; ?></dt>						
+							<dt><label for="carteID"><?php echo $lang['id_card'];?></label>  <?php echo  $this->raisin['carteID'].'</br>'; ?></dt>
+							<dt><label for="createur"><?php echo $lang['card_creator'];?></label>  <?php echo $this->res4['username'].'</br>'; ?></dt>
+							<dt><label for="oracle"><?php echo $lang['card_oracle'];?></label>  <?php echo $this->res2['username'].'</br>'; ?></dt>						
 						</dl>
 						<h3><?php echo $lang['which_word'];?> </h3>
 						<div class="inner" style="height: 5em;">
@@ -54,31 +103,26 @@ include('./views/page.header.html');
 						<input type="hidden" id='motadeviner' value="<?php echo $this->res3['mot']; ?>"/>
 					</div>
 				</fieldset>
-				<?php } else{echo $lang['NoGame'];
-
-} ?>
+				<?php } ?>
 			</div>
 	</div>
 </div>
 </div>
+
 <script type="text/javascript">
-// Résultats 
+// RÃ©sultats 
 	// Si le devin donne la bonne réponse
 	function validate() {
 		
 		var motadeviner=document.getElementById('motadeviner').value;
 		var motentre=document.getElementById('mot').value;
-		//fonction qui rend insensible à la casse et enlève les espaces en trop
+		//fonction qui rend insensible Ã  la casse et enlÃ¨ve les espaces en trop
 		var motentre=(motentre.replace(/\s{2,}/g, ' ').trim().toLowerCase());
 		var motadeviner=(motadeviner.replace(/\s{2,}/g, ' ').trim().toLowerCase());
-		
-		/* alert("'mot entré "+motentre+"'");
-		 alert("'mot à trouver "+motadeviner+"'")*/;
-		
+				
 	//if (document.getElementById('motadeviner').value == document.getElementById('mot').value ) {
 	if (motentre == motadeviner) {
-				document.location.href="index.php?mode=diviner.result"
-			
+				document.location.href="index.php?mode=diviner.result";
 			}
 	// Si le devin donne une réponse fausse, on vide la zone de texte 
 		else {
@@ -93,26 +137,8 @@ $(document).keypress(function(e) {
     }
 });
 
-// Timer
-var seconds = 60;
-function secondPassed() {
-    var minutes = Math.round((seconds - 30)/60);
-    var remainingSeconds = seconds % 60;
-    if (remainingSeconds < 10) {
-        remainingSeconds = "0" + remainingSeconds;  
-    }
-    document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
-    if (seconds == 0) {
-        clearInterval(countdownTimer);
-	document.location.href="index.php?mode=diviner.timeout"
-        document.getElementById('countdown').innerHTML = "Buzz Buzz";
-    } else {
-        seconds--;
-    }
-}
-var countdownTimer = setInterval('secondPassed()', 1000);
-</script>
-  <script>
+
+
        // Module audio RTC
        function getByID(id) {
             return document.getElementById(id);
@@ -120,17 +146,17 @@ var countdownTimer = setInterval('secondPassed()', 1000);
         var startAudio = getByID('start-audio');
         var audio = getByID('audio');
 
-	// commandes pour limiter l'�coute d'un enregistrement
+	// commandes pour limiter l'écoute d'un enregistrement
 	// la premiere empeche de mettre en pause en relancant la lecture quand on appuie sur le bouton pause
 	audio.addEventListener("pause",function(first){audio.play();},true);
-	// la seconde empeche de relire un fichier quand on arrive � la fin en r�initialisant la source du fichier � lire
+	// la seconde empeche de relire un fichier quand on arrive à la fin en réinitialisant la source du fichier à lire
 	audio.addEventListener("ended",function(first){audio.src = '';});
 
         var audioConstraints = {
             audio: true
         };
-        </script>
-        <script>
+
+
         var audioStream;
         var start;
         startAudio.onclick = function() {
@@ -143,30 +169,8 @@ var countdownTimer = setInterval('secondPassed()', 1000);
             
             
         };
-        </script>
-<script>
-	//Récupération de l'identifiant  pour insertion dans la table partie  Essai
-	/*var enrID = $("#enrID").attr("data-enrID");
-	
-            // POST the Blob using XHR2
-	    xhr('controllers/diviner.result.class.php?enrID="'+enrID+'"', function(fileURL) {
+</script>
 
-                var source = document.createElement('source');
-                var href = location.href.substr(0, location.href.lastIndexOf('/') + 1);
-                source.src = href + fileURL;
-            });
-	    
-	      function xhr(url, data, callback) {
-            var request = new XMLHttpRequest();
-            request.onreadystatechange = function() {
-                if (request.readyState == 4 && request.status == 200) {
-                    callback(request.responseText);
-                }
-            };
-	       request.open('POST', url);
-		    request.send(data);
-		} */
-	</script> 
 
 <?php
 include('./views/page.footer.html');

@@ -1,15 +1,16 @@
 <?php
 $title = 'Diviner Timeout';
+
+		 	
 include('./views/page.header.html');
 ?>
 <div id="main-container">
 	<div id="jrForm">
 		<form class="form-jr" role="form" id="diviner.timeout" method="post" action="./index.php">
 			<fieldset>
-					<legend class="form-jr-heading"><?php echo $lang['too_bad'];?></legend>
-						<dl>
-							<dt><label ><?php echo $lang['diviner_timeout'];?></label><dt>
-						</dl>
+
+						<h2><?php echo $lang['Word2find'];?></h2>
+					<dl>
 						
 						<dt><label for="mot"><?php echo $lang['word_to_find'];?></label> : <?php echo $this->res['mot'].'</br>'; ?></dt>
 						<dt><label for="tabou1"><?php echo $lang['taboo_1'];?></label> : <?php echo $this->res['tabou1'].'</br>'; ?></dt>
@@ -18,7 +19,27 @@ include('./views/page.header.html');
 						<dt><label for="tabou4"><?php echo $lang['taboo_4'];?></label> : <?php echo $this->res['tabou4'].'</br>'; ?></dt>
 						<dt><label for="tabou5"><?php echo $lang['taboo_5'];?></label> : <?php echo $this->res['tabou5'].'</br>'; ?></dt>
 					</dl>
-		
+					<?php 
+						$_SESSION["idCard"] = $this->res['carteID'];
+						$_SESSION["idEnregistrement"] = $this->res2['enregistrementID'];
+						//si on a perdu une partie en tant que devin, on fait perdre des points à l'oracle. Il faut l'informer ;)
+
+						//notification pour l'oracle
+						$notif = new Notification;
+						$notif->initNotif();
+						$mess = $this->devinName." : -".$points." points";
+						$notif->addNotif($this->oracle,$mess,$this->diviner);
+							
+					?>
+
+					<p><?php echo $lang["RecordCard"]?><a id="ImgDivin" href="index.php?mode=oracle.byid"><img src="./style/default.css/imgs/recON.png" width='20px' height='20px'></a>
+					</p>
+
+					<p><?php echo $lang["RecordArbitre"];?><a id="ImgDivin" href="index.php?mode=druid.arbitrage"><img src="./style/default.css/imgs/arbitre.png" width='20px' height='20px'></a>
+					</p>
+					<p><?php echo $lang["restart"];?><a id="ImgDivin" href="index.php?mode=diviner.game"><img src="./style/default.css/imgs/restart.png" width='20px' height='20px'></a>
+					</p>				
+					</br></br>		
 					
 				<div id="form-cmd">
 					<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php echo $lang['return']; ?>" class="submit_buttons" />

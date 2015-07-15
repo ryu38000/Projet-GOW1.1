@@ -1,0 +1,171 @@
+.motatrouver{
+	color : green;
+	font-style : italic;
+}
+.motTaboo{
+	color : red;
+	font-style : italic;
+}
+
+#card tbody td p{
+	float:left;   
+	margin-left: 10%;
+	font-family: playball;
+	font-size:20px;
+}
+
+#card thead td p{
+	font-family: playball;
+	font-size: 25px;
+	font-style: normal;
+	background-color:#CFFFCD;
+	border-radius:15px; 
+	text-align:center;
+
+}
+#card {
+	box-shadow: 10px 10px 5px #888888;
+}
+
+.timer{
+	border-radius:15px; 
+	font-style:bold;
+	font-align:center;
+	width:5px;padding-top:10px;
+	padding-bottom:10px;
+	padding-left:40px;
+	padding-right:40px; 
+	background-color:#FF5757; 
+}
+.messageUtil{
+	font-family: playball;
+	font-size : 20px;
+}
+
+
+/*Notification*/
+.top-bar
+{
+    height: 30px;
+    width: 100%;
+    background-color: rgb(0, 0, 136);
+    padding: 10px;
+    z-index: -2;
+    float: right;
+}
+.top-bar-container{
+    margin: 0 auto;
+    width: 1000px;
+}
+
+#nav
+{
+    list-style:none;
+    margin: 0px;
+    padding: 0px;
+    float: right;
+    padding: 10px;
+}
+#nav li {
+    float: left;
+    margin-right: 20px;
+    font-size: 14px;
+    font-weight:bold;
+}
+#nav li a{color:#FFF;text-decoration:none}
+#nav li a:hover{color:#006699;text-decoration:none}
+
+#select_lang{
+	color: #0;
+	margin-top:15px;
+	margin-left: 10px;
+}
+
+#notification_li{position:relative}
+#notificationContainer {
+    background-color: #fff;
+    border: 1px solid rgba(100, 100, 100, .4);
+    -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+    overflow: visible;
+    position: absolute;
+    top: 30px;
+    margin-left: -270px;
+    width: 400px;
+    z-index: 1;
+    display: none;
+}
+#notificationContainer:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    color: transparent;
+    border: 10px solid black;
+    border-color: transparent transparent white;
+    margin-top: -20px;
+    margin-left: 288px;
+}
+#notificationTitle {
+    z-index: 1000;
+    font-weight: bold;
+    padding: 8px;
+    font-size: 13px;
+    background-color: #ffffff;
+    width: 384px;
+    border-bottom: 1px solid #dddddd;
+}
+#notificationsBody {
+    padding: 33px 0px 0px 0px !important;
+    height:300px;
+    overflow: scroll;
+}
+#notificationsMess {
+    background-color: rgba(96, 103, 207, 0.7);
+    border-radius:5px; 
+    min-height:64px;
+    text-align:center;	
+    margin-top : 5px;
+    margin-bottom : 5px;
+}
+#notificationsMess p {
+         font-family: playball;
+	 color:white;
+  	 font-size: 15px;
+	 height:64px;
+}
+#Img{
+	float:left;
+	position:relative;
+	width:64px;
+	height:64px;	
+}
+#delete{
+	float:right;
+
+}
+#notificationFooter {
+    background-color: #e9eaed;
+    text-align: center;
+    font-weight: bold;
+    padding: 8px;
+    font-size: 12px;
+    border-top: 1px solid #dddddd;
+}
+#notification_count {
+    padding: 3px 7px 3px 7px;
+    background: #cc0000;
+    color: #ffffff;
+    font-weight: bold;
+    margin-left: 40px;
+    border-radius: 9px;
+    position: absolute;
+    margin-top: 5px;
+    font-size: 11px;
+}
+
+#ImgDivin{
+	float:right;
+	position:absolute;
+	margin-left:10px;
+}

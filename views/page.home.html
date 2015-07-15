@@ -5,19 +5,33 @@ include('./views/page.header.html');
 ?>
 <div id="main-container">
 
+	
 	<div id="center-block">
-		<h1><?php echo $lang['home_welcome']." "; ?><?php echo htmlspecialchars($GLOBALS['user']->username); ?>!</h1><br/>
-		<h2><?php echo $lang['learning'];?></h2>
+	<?php 
+		if (strlen($user->langGame) == 0) {
+		
+//~ 			echo '<script language="javascript">'
+//~ 			. 'alert("' . $lang['home_miss_lang_game'] . '")'
+//~ 			. '</script>';
+			echo "<h2 style='color:red'>" . $lang['home_miss_lang_game'] . "</h2>";
+		}
+	?>
+	<h2><?php echo $lang['home_welcome']." "; ?><?php echo htmlspecialchars($GLOBALS['user']->username); ?>!</h2>
+	
+	
+	<h2><?php echo $lang['select_role']; ?></h2>
 		<ul id="modes" class="nav nav-tabs">
-			<li type="button" class="btn btn-primary btn-lg btn-block" >
+	
+	
+			<li type="button" class="btn btn-primary btn-lg btn-block" <?php if (strlen($user->langGame) == 0) {echo "disabled";} ?> >
 				
 				<a href="?mode=oracle.menu" title="oracle"><?php echo $lang['oracle'];?></a>
 			</li>
-			<li type="button" class="btn btn-primary btn-lg btn-block">
+			<li type="button" class="btn btn-primary btn-lg btn-block" <?php if (strlen($user->langGame) == 0) {echo "disabled";} ?> >
 				<a href="?mode=druid.game" title="druid"><?php echo $lang['druide'];?></a>
 			</li>
-			<li type="button" class="btn btn-primary btn-lg btn-block">
-				<a href="?mode=diviner.game" title="diviner"><?php echo $lang['devin'];?></a>
+			<li type="button" class="btn btn-primary btn-lg btn-block" <?php if (strlen($user->langGame) == 0) {echo "disabled";} ?> >
+				<a href="?mode=diviner.menu" title="diviner"><?php echo $lang['devin'];?></a>
 			
 			</li>
 		</ul><br/>
@@ -33,6 +47,7 @@ function getOnlineMembers(){
 	li.appendTo('li#battle-select');
 }
 </script>
+
 <?php
 include('./views/page.footer.html');
 ?>

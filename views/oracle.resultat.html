@@ -11,12 +11,13 @@ include('./views/page.header.html');
 					<ul>
 					<?php foreach ( $this->errors as $error ) { ?>
 						<li>
-							<?php echo $error; ?>
+							<?php echo $lang[$error]; ?>
 						</li>
 					<?php } ?>
 					</ul>
 				</fieldset>
-				<?php } ?>
+				<?php } if(isset($_POST['submit_form'])){
+				?>
 				<!--<fieldset>-->
 					<legend class="form-jr-heading"><?php echo $lang['result']; ?></legend>
 					<dl>
@@ -28,6 +29,35 @@ include('./views/page.header.html');
 						<!--<input type="hidden" name="mode" value="<?php //echo $this->mode; ?>"/> -->
 
 					</div>
+				<?php }
+				else{
+					if(isset($pointsPerdus)){ ?>
+					<!--<fieldset>-->
+					<legend class="form-jr-heading"><?php echo $lang['result']; ?></legend>
+					
+						<p class='messageUtil'><?php echo $lang['giveUp'].'</br>'; ?></p>
+						
+					
+					<div id="form-cmd">
+						<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php echo $lang['return']; ?>" class="submit_buttons" />
+						<!--<input type="hidden" name="mode" value="<?php //echo $this->mode; ?>"/> -->
+
+				
+				<?php }
+					else{?>
+											<!--<fieldset>-->
+					<legend class="form-jr-heading"><?php echo $lang['result']; ?></legend>
+					
+						<p class='messageUtil'><?php echo $lang['giveUpWithoutPoints'].'</br>'; ?></p>
+						
+					
+					<div id="form-cmd">
+						<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php echo $lang['return']; ?>" class="submit_buttons" />
+						<!--<input type="hidden" name="mode" value="<?php //echo $this->mode; ?>"/> -->
+					</div>
+				<?php }
+				}?>				
+					
 				<!--</fieldset>-->
 			</form>
 </div>

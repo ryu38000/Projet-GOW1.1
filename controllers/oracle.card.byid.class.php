@@ -34,17 +34,21 @@ class oracle_card_byid
 	private function init()
 	{
 	
-		// récupération de l'id de l'utilisateur et de sa langue étudiée
+		// récupération de l'id de l'utilisateur et de sa langue à étudier
 		$this->user = user::getInstance();
 		$this->userlang = $this->user->userlang;
 		$this->oracle = $this->user->id;
 		
-		//récupération du l'id de la carte dans la zone de texte
+		//rÃ©cupÃ©ration du l'id de la carte dans la zone de texte
 		$this->submit = isset($_POST['submit_form']);
 		if ( $this->submit )
 		{	
 			
 		    $this->carteId = isset($_POST['carteId']) ? trim($_POST['carteId']) : '';
+		}
+		else if( isset($_SESSION["idCard"])){
+
+			$this->carteId = isset($_SESSION['idCard']) ? trim($_SESSION['idCard']) : '';
 		}
 		return true;
 	}
@@ -54,7 +58,7 @@ class oracle_card_byid
 	// modifications 08/02/2015
 	$db = db::getInstance();
 	//if ( !$this->submit)
-	if ( !$this->submit || $this->errors )
+	if ( ( !$this->submit || $this->errors ) && !(isset($_SESSION["idCard"])) )
 	{
 		return false;
 	}
@@ -69,17 +73,24 @@ class oracle_card_byid
 
 	private function display()
 	{
-		if(isset($_POST['submit_form']))
+		if(isset($_POST['submit_form']) || isset($_SESSION["idCard"]))
 		{	
+			if(isset($this->res['carteID'])){
+
 			
-			if ( $_POST['carteId'] != $this->res['carteID'] )
-			{
-				//echo $lang['unknown_id']; --> je ne parvient pas a utiliser le echo pour l'instant
-				$this->errors[] = 'Carte inaccessible: soit la carte n\'existe pas dans cette langue, soit vous en êtes le créateur et dans ce cas vous ne pouvez pas y jouer.' ;
-				include('./views/oracle.card.byid.html');	
-				}else{	
+				if (isset($_POST['carteId']) && $_POST['carteId'] != $this->res['carteID'])
+				{
+					array_push($this->errors, 'no_card');
+					include('./views/oracle.card.byid.html');	
+				}
+				else{	
 					include('./views/oracle.card.display.html');
 				}
+			}
+			else{
+				array_push($this->errors,'unavailable_card');
+					include('./views/oracle.card.byid.html');		
+			}	
 		}else{
 			include('./views/oracle.card.byid.html');
 		}

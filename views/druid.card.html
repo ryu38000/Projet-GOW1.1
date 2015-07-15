@@ -13,7 +13,7 @@ include('./views/page.header.html');
 					<ul>
 					<?php foreach ( $this->errors as $error ) { ?>
 						<li>
-							<?php echo $error; ?>
+							<?php echo $lang[$error]; ?>
 						</li>
 					<?php } ?>
 					</ul>
@@ -37,54 +37,56 @@ include('./views/page.header.html');
 							<option value ="difficile"><?php echo $lang['level_hard']; ?></option>
 						</select>
 					</dl>
-	<!--
-					 division de l'affichage du minimum: 2 mots tabous
-	-->
-					<div name="min" id="min" style="visibility: visible"> 
-						<dl>
-							<dt><label for="tabou1"><?php echo $lang['taboo_1']; ?></label></dt>
-							<dd><input type="text" id="tabou1" name="tabou1" required="required" value="<?php echo htmlspecialchars($this->tabou1); ?>" /></dd>
-						</dl>
-						<dl>
-							<dt><label for="tabou2"><?php echo $lang['taboo_2']; ?></label></dt>
-							<dd><input type="text" id="tabou2" name="tabou2" required="required" value="<?php echo htmlspecialchars($this->tabou2); ?>" /></dd>
-						</dl>
-					</div>
 					
-	<!--
-					division de l'affichage du minimum + 1: 3 mots tabous
-	-->				<div>
-						<input class="btn btn-primary" type="button" onClick="addtab();" value="<?php echo $lang['more_taboo']; ?>">
-						<input class="btn btn-primary" type="button" onClick="supprtab();" value="<?php echo $lang['less_taboo']; ?>">
-					</div>
-					<div name="minplus1" id="minplus1" style="visibility: hidden"> 
-						<dl>
-							<dt><label for="tabou3"><?php echo $lang['taboo_3']; ?></label></dt>
-							<dd><input type="text" id="tabou3" name="tabou3" value="<?php echo htmlspecialchars($this->tabou3); ?>" /></dd>
-						</dl>
+					<dl>
+						<dt><label for="thematique"><?php echo $lang['subj']; ?></label></dt>
+						<dd><input type="text" id="theme_carte" name="theme_carte" required="required"  onFocus="blankList()"/></dd>
+						<dd><select id="theme_carte_list" name="theme_carte_list" onChange="copyThemeToInput()" >
+						<?php
+							$themes = array_unique(explode(';',strtolower($this->theme_carte)));
+							sort($themes);
+							foreach ($themes as $l) {
+								if (strlen($l) > 0) {
+									echo "<option value='" . $l . "'>" . $l . "</option>";
+									//echo "<tr><td align='center'>" . 
+											//"<input list='theme_carte' type='text' name='theme_list" . $l . "' required='required' size='10' \" value='" . $l . "'/>" ;
+								}
+							}
 					
-					</div>
-	<!--
-					 division de l'affichage du minimum + 2 : 4 mots tabous
-	-->
+						?>
+						</select>
+						</dd>
+						<!--<select id="theme_carte" name="theme_carte" >
+							<option value =""></option>
+						
+						</select>-->
+					</dl>
+	
+					<dl>
+					<dt><label for="taboo" ><?php echo $lang['taboo']; ?></label></dt>
 					
-					<div name="minplus2" id="minplus2" style="visibility: hidden"> 
-						<dl>
-							<dt><label for="tabou4"><?php echo $lang['taboo_4']; ?></label></dt>
-							<dd><input type="text" id="tabou4" name="tabou4" value="<?php echo htmlspecialchars($this->tabou4); ?>" /></dd>
-						</dl>
-					</div>
-	<!--
-					 division de l'affichage du maximum (minimum +3) : 5 mots tabous 
-	-->
+							
+						<table id="taboo">
+							
+						<tr align="center">
+							<td><input list="motTaboo" name="tabou1" required="required" size="20"/></td>
+						</tr>
+							
+						
 					
-					<div name="max" id="max" style="visibility: hidden"> 
-						<dl>
-							<dt><label for="tabou5"><?php echo $lang['taboo_5']; ?></label></dt>
-								<dd><input type="text" id="tabou5" name="tabou5" value="<?php echo htmlspecialchars($this->tabou5); ?>" /></dd>
-						</dl>
-					</div>
-					
+						</table>
+						<table>
+							<tr>
+								<td><button type="button" id="taboo_acceptBtn" onClick="dispalyMoreTaboo();" align="center"  class="btn btn-primary"><?php echo $lang['add_btn']; ?> </button></td>
+							</tr>
+							<tr>
+								<td><button type="button" id="taboo_Cancel" onClick="dispalyLessTaboo();" align="center"  class="btn btn-primary"><?php echo $lang['remv_btn']; ?> </button></td>
+							</tr>
+						</table>
+			
+					</dl>
+				
+	
 					
 					<div id="form-cmd">
 						
@@ -100,99 +102,45 @@ include('./views/page.header.html');
 		</div> <!-- fin jrForm  -->
 	</div>
 </div>
-<script language="Javascript"> 
-		
-		
-		var cpt = 0;
-		
-		// fonction lorsqu'on appuie sur "ajouter un mot tabou"
 
-		function addtab()
-		{
-			if (cpt<3)
-			{	
-				cpt=cpt+1;
-				bascule();
-			}	
+
+<script>
+	function dispalyMoreTaboo(){
+			
+			var t=document.getElementById("taboo");
+			var count = t.getElementsByTagName("tr").length;
+			if (count === 6) { return;}
+			var tr = t.insertRow(count);
+		//	var td = tr.insertCell(0);
+		//	td.align = "center";
+			var td = tr.insertCell(0);
+			td.align="center";
+			i = document.createElement('input');
+			i.type="text";
+			i.setAttribute('list','motTaboo');
+			count++;
+			i.setAttribute('name','tabou'.concat(count));	
+			i.size="20";
+			td.appendChild(i);
+			
 		}
-		
-		// fonction lorsqu'on appuie sur "supprimer un mot tabou"
-		
-		function supprtab()
-		{
-			if (cpt>0)
-			{
-				cpt=cpt-1;	
-				bascule();
-			}			
-		}
-		
-		
-		// fonction de changement d'état appelée par chacune des deux fonctions	
-		function bascule()
-		{
-			switch (cpt) 
-			{	
-				case 0:
-					document.getElementById('min').style.visibility="visible"; 
-					document.getElementById('minplus1').style.visibility="hidden"; 
-					document.getElementById('minplus2').style.visibility="hidden";
-					document.getElementById('max').style.visibility="hidden";
-					document.getElementById('tabou3').value="";
-					document.getElementById('tabou4').value="";
-					document.getElementById('tabou5').value="";
-					document.getElementById('tabou3').required="";
-					document.getElementById('tabou4').required="";
-					document.getElementById('tabou5').required="";
-					break;
-					
-				case 1:
-					document.getElementById('min').style.visibility="visible"; 
-					document.getElementById('minplus1').style.visibility="visible"; 
-					$('#tabou3').focus();
-					//$(".form-jr-heading").fadeOut(1000); fait disparaitre (en fondu de 1000 ms) tous les éléments de classe form-jr-heading
-					//$(".form-jr-heading").fadeIn(1000); fait apparaitre (en fondu de 1000 ms) tous les éléménts de classe form-jr-heading
-					document.getElementById('minplus2').style.visibility="hidden";
-					document.getElementById('max').style.visibility="hidden"; 
-					document.getElementById('tabou4').value="";
-					document.getElementById('tabou5').value="";
-					document.getElementById('tabou3').required="required";
-					document.getElementById('tabou4').required="";
-					document.getElementById('tabou5').required="";
-					break;
-						
-				case 2:
-					document.getElementById('min').style.visibility="visible"; 
-					document.getElementById('minplus1').style.visibility="visible"; 
-					document.getElementById('minplus2').style.visibility="visible";
-					document.getElementById('max').style.visibility="hidden"; 
-					document.getElementById('tabou5').value="";
-					document.getElementById('tabou3').required="required";
-					document.getElementById('tabou4').required="required";
-					$('#tabou4').focus();
-					document.getElementById('tabou5').required="";
-					break;
-						
-				case 3:
-					document.getElementById('min').style.visibility="visible"; 
-					document.getElementById('minplus1').style.visibility="visible"; 
-					document.getElementById('minplus2').style.visibility="visible";
-					document.getElementById('max').style.visibility="visible"; 
-					document.getElementById('tabou3').required="required";
-					document.getElementById('tabou4').required="required";
-					document.getElementById('tabou5').required="required";
-					$('#tabou5').focus();
-					break;
-					
-			}
-					
-		}
-		//~ function submit_redirect()
-		//~ {
-			//~ document.forms['creation.partie'].submit();
-			//~ document.location.href="./index.php?mode=druid.result" ;	
-		//~ }
-</script> 
+	function dispalyLessTaboo(){
+		var t=document.getElementById("taboo");
+		var count = t.getElementsByTagName("tr").length;
+		if (count >= 2) {	t.deleteRow(count-1); }
+	}
+	
+	function copyThemeToInput() {
+		document.getElementById('theme_carte').value = document.getElementById('theme_carte_list').value;
+	}
+	
+	function blankList() {
+		document.getElementById('theme_carte_list').value = '';
+		document.getElementById('theme_carte').value = '';
+	}
+	
+</script>
+
 <?php
 include('./views/page.footer.html');
 ?>

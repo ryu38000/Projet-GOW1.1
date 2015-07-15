@@ -13,7 +13,7 @@ include('./views/page.header.html');
 					<ul>
 					<?php foreach ( $this->errors as $error ) { ?>
 						<li>
-							<?php echo $error; ?>
+							<?php echo $lang[$error]; ?>
 						</li>
 					<?php } ?>
 					</ul>
@@ -66,25 +66,35 @@ include('./views/page.header.html');
 		</div> <!-- fin jrForm  -->
 	</div>
 </div>
+<script type="text/javascript" src="controllersJS/timer.js"></script>
 <script>
 // Timer
-var seconds = 20;
-function secondPassed() {
-    var minutes = Math.round((seconds - 30)/60);
-    var remainingSeconds = seconds % 60;
-    if (remainingSeconds < 10) {
-        remainingSeconds = "0" + remainingSeconds;  
-    }
-    document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
-    if (seconds == 0) {
-        clearInterval(countdownTimer);
-	document.location.href="index.php?mode=oracle.timeout.card"
-        document.getElementById('countdown').innerHTML = "Buzz Buzz";
-    } else {
-        seconds--;
-    }
+
+//Initialisation du chrono
+function renders(minutes, seconds){
+	if(seconds == Math.floor(seconds)){
+		if (seconds < 10){
+			seconds = "0" + seconds;  
+		}
+		$('#countdown').html(minutes + ":" + seconds);
+	}
 }
-var countdownTimer = setInterval('secondPassed()', 1000);
+function pressurise(){
+	$('#countdown').css('background-color', '#'+(Math.random()*0xFFFFFF<<0).toString(16));
+}
+
+	function finChrono(){
+		document.location.href="index.php?mode=oracle.timeout.card"
+		if(!monChrono.isRunning()){
+			$('#countdown').css('background-color', 'white');
+			$('#countdown').html("Buzz Buzz");
+		}
+	}
+
+
+var monChrono = new MyTimer(renders,<?php echo $this->time; ?>, finChrono, 10,pressurise);
+
+monChrono.start();
 </script>
 <script language="Javascript"> 
 		// fonction pour n'afficher que les champs de 3 mots tabous (facile)

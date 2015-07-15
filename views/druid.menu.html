@@ -1,9 +1,31 @@
 <?php
 $title = 'Game of Words';
 include('./views/page.header.html');
+include('./controllersJS/menu_lang.js');
+include('./sys/load_iso.php');
+
 ?>
 <div id="main-container">
 	<div id="center-block">
+	
+			<!-- cette formulaire sert à choisir la langue de jeu-->
+			<form id="select_lang">
+				<h2><?php echo $lang['learning'];?>
+					<select name="chooseLang" size="1" id="chooseLang" onchange="myFunction('Druide')">
+						<?php
+							foreach (explode(';',$user->spoken_lang) as $l) {
+								if (strlen($l) > 0) {
+									$code = array_search($l,$iso);
+									echo "<option value=" . $code ;
+									if (strcmp($user->langGame,$code) == 0) { echo " selected"; }
+									echo ">" . $l . "</option>";
+								}
+							}
+						?>
+					</select>
+				</h2>
+			</form>
+			
 		<h2><?php echo $lang['select_mode']; ?></h2>
 		<ul id="modes" class="nav nav-tabs">
 			<li type="button" class="btn btn-primary btn-lg btn-block" >

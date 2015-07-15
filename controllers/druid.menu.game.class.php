@@ -20,9 +20,6 @@ class druid_menu_game
 
 	private function init()
 	{
-		// Coucou David et Maryam! Cette page est relativement inutile,
-		//elle affiche le menu du druide mais ne fait rien d'autre. Sans dout y a-t-il moyen de 
-		//supprimer cet intermédiaire.
 		return true;
 	}
 

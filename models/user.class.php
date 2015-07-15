@@ -9,6 +9,8 @@ class user
 	public $useremail = '';
 	public $useronline = false;
 	public $userlang = '';
+	public $langGame = '';
+	public $spoken_lang = '';
 
 	public $lang = 'en';
 
@@ -41,6 +43,8 @@ class user
 		// lire la langue sur la session ou utiliser celle par defaut
 		$this->lang = $this->guess_lang();
 
+
+
 		// stocker la langue sur la session
 		$this->set_lang();
 	}
@@ -68,6 +72,12 @@ class user
 	public function guess_lang()
 	{
 		//return isset($_SESSION['lang']) ? $_SESSION['lang'] : self::DEFAULT_LANG;
+
+		if(!isset($_SESSION["langDevin"] )){
+			$_SESSION["langDevin"]= $this->langGame;
+
+		}
+
 		return $this->userlang;
 	}
 
@@ -75,11 +85,21 @@ class user
 	public function set_lang($lang=false)
 	{
 		$_SESSION['lang'] = $lang === false ? $this->lang : $lang;
+		return $this->update_lang($lang);
 	}
 
 	public function get_lang()
 	{
 		return $this->lang;
+	}
+	
+	private function update_lang($lang=false) {
+		$db = db::getInstance();
+		if ($lang === false) { return false;}
+		$sql = 'UPDATE user
+					SET userlang = ' . $lang . '
+					WHERE userid = ' . intval($this->id);
+		return $db->query($sql);
 	}
 
 	public function update_online_status($off=false)
@@ -122,10 +142,19 @@ class user
 			$this->id = (int) $row['userid'];
 			$this->username = (string) $row['username'];
 			$this->useremail = (string) $row['useremail'];
-			//$this->useronline = (int) $row['useronline'];
+			$this->langGame = (string) $row['userlang_game'];
 			$this->userlang = (string) $row['userlang'];
-			return true;
+			$this->userlvl = (string) $row['userlvl'];
 		}
+		
+		$sql = 'SELECT * FROM user_niveau WHERE userid = ' . intval($id);
+		$result = $db->query($sql);
+		$row = $result->fetch_assoc();
+		$result->free();
+		if ($row) {
+			$this->spoken_lang = (string) $row['spoken_lang'];
+			return true;
+		}		
 		return false;
 	}
 }

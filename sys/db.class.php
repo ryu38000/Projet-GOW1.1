@@ -22,7 +22,7 @@ class db
     public function connect()
     {
         $dbhost = $dbuser = $dbpasswd = $dbname = '';
-        include(realpath(dirname(__FILE__) . '/db.config.php'));
+        include(realpath(dirname(__FILE__) . '/config.php'));
         $this->handler = new mysqli($dbhost, $dbuser, $dbpasswd, $dbname);
 		if ( $this->handler->connect_error )
 		{

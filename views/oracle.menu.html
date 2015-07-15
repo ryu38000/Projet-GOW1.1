@@ -1,14 +1,37 @@
 <?php
 $title = 'Game of Words';
 include('./views/page.header.html');
+include('./controllersJS/menu_lang.js');
+include('./sys/load_iso.php');
 ?>
 <div id="main-container">
 	<div id="center-block">
-		<h2><?php echo $lang['select_mode']; ?></h2>
+	
+			<!-- cette formulaire sert Ã  choisir la langue de jeu-->
+			<form id="select_lang">
+				<h2><?php echo $lang['learning'];?>
+					<select name="chooseLang" size="1" id="chooseLang" onchange="myFunction('Oracle')">
+						<?php
+							foreach (explode(';',$user->spoken_lang) as $l) {
+								if (strlen($l) > 0) {
+									$code = array_search($l,$iso);
+									echo "<option value=" . $code ;
+									if (strcmp($user->langGame,$code) == 0) { echo " selected"; }
+									echo ">" . $l . "</option>";
+								}
+							}
+						?>
+
+					</select>
+				</h2>
+			</form>
+	
+	
+	<h2><?php echo $lang['select_mode']; ?></h2>
 		<ul id="modes" class="nav nav-tabs">
 <?php 
-	// Test de vérification de la langue de l'utilisateur. Si il n'apprend pas le français, il ne peux (pour l'instant) pas créer de carte aléatoire.
-	if ( $this->wronglang !== '0'  ) { ?>
+	// Test de vÃ©rification de la langue de l'utilisateur. Si il n'apprend pas le franÃ§ais, il ne peux (pour l'instant) pas crÃ©er de carte alÃ©atoire.
+	if ($user->langGame !== 'fr'  ) { ?>
 			<li type="button" class="btn btn-primary btn-lg btn-block" disabled="disabled">
 				<a href="?mode=oracle.card.alea" title="card_alea"><?php echo $lang['card_alea']; ?></a>
 			</li>
@@ -30,6 +53,8 @@ include('./views/page.header.html');
 		</ul>
 	</div>
 </div>
+
+
 <?php
 include('./views/page.footer.html');
 ?>

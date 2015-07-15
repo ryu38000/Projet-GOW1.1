@@ -3,6 +3,7 @@
 class oracle_timeout_card
 {
 	private $mode = '';
+	private $notif = array();
 
 	public function set_mode($mode)
 	{
@@ -22,7 +23,7 @@ class oracle_timeout_card
 
 	private function init()
 	{
-		
+		$_SESSION["notif"]["notification_error"]["oracle"] = 'oracle_card_timeout';
 		return true;
 	}
 
@@ -38,7 +39,7 @@ class oracle_timeout_card
 
 	private function display()
 	{
-		include('./views/oracle.card.timeout.html');
+		include('./views/page.home.html');
         return true;
 	}
 }

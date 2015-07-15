@@ -7,12 +7,12 @@ class druid_menu
 	public function set_mode($mode)
 	{
 		$this->mode = $mode;
-	
 	}
 
 	public function process()
 	{
 	
+
 
 // Traitement des modes
 	switch ( $this->mode )
@@ -44,7 +44,6 @@ class druid_menu
 		break;
 		
 			default:
-				//print $mode;
 				include('controllers/druid.menu.game.class.php');
 				$controller = new druid_menu_game();
 				$controller->set_mode($this->mode);

@@ -1,6 +1,8 @@
 <?php
 $title = 'Oracle Description';
 include('./views/page.header.html');
+include('./sys/config.php');
+
 ?>
 
 <!--Popup Overlay -->
@@ -8,27 +10,33 @@ include('./views/page.header.html');
 	<div class="content">
 		<div style="padding:5px;">
 		<h2><?php echo $lang['warning']; ?></h2><br/><h3><?php echo $lang['cut_sound']; ?></h3> 
-		<button class="close" onclick="menu()" style="cursor: pointer; background:#000; color:white; text-align:center; font-weight:bold; position:absolute; bottom:20%; left:50%; padding:0 2px; width:200px; height:30px; line-height:20px">OK</button>
+		<button class="close" style="cursor: pointer; background:#000; color:white; text-align:center; font-weight:bold; position:absolute; bottom:20%; left:50%; padding:0 2px; width:200px; height:30px; line-height:20px">OK</button>
 		<div class="resume">&nbsp;</div>
 		</div>
 	</div>
 </div>
 <!-- Fin Popup -->
 <div id="main-container">
+	<div id="userid" data-userid="<?php echo $this->oracle; ?>" style="display:none"></div>
+	<div id="userlang" data-userlang="<?php echo $this->userlang; ?>" style="display:none"></div>
+	<div id="cardid" data-cardid="<?php echo $this->res['carteID']; ?>" style="display:none"></div>
+	<div id="levelcard" data-levelcard="<?php echo $this->res['nivcarte']; ?>" style="display:none"></div>
+			<?php if ( $this->errors ) { ?>
+			<div class="form-jr">
+				<fieldset class="errors">
+					<legend>Erreurs</legend>
+						<ul>
+						<?php foreach ( $this->errors as $error ) { ?>
+							<li>
+								<?php echo $lang[$error]; ?>
+							</li>
+						<?php } ?>
+						</ul>
+					<?php } else{ ?>
+				</fieldset>
+			</div>
 	<div id="jrForm">
 		<div id="firstPage">
-			<?php if ( $this->errors ) { ?>
-			<fieldset class="errors">
-				<legend>Erreurs</legend>
-					<ul>
-					<?php foreach ( $this->errors as $error ) { ?>
-						<li>
-							<?php echo $error; ?>
-						</li>
-					<?php } ?>
-					</ul>
-				<?php } ?>
-			</fieldset>
 				<div id="descr" style="font-family:Playball;font-style: normal;">
 					<legend class="form-jr-heading" style="text-align:center; font-style:bold;"><?php echo $lang['rules']; ?></legend>
 					<dl style="font-size:20px; padding:10px;">
@@ -42,361 +50,114 @@ include('./views/page.header.html');
 							<td><button class="btn btn-primary btn-lg btn-block" id="record" type="button" style="margin-left:10px;" ><?php echo $lang['record']; ?></button></td>
 						</tr>
 					</table><center>
-		</div>				
-		
-		<form class="form-jr" role="form" id="description.carte" name="formSaisie" method="post" action="./index.php?mode=oracle.result">   					
-		
+		</div>	
+		<form class="form-jr" role="form" id="descriptioncarte" name="formSaisie" method="post" action="./index.php?mode=oracle.result">  		   							
 		<div id="secondPage">
-				
-				<div id='card'></div>
-				<center><table>
-				<tr> <th id="countdown" class="timer">
-					</th>
-				</tr>
-				</table></center> 	
-				<img src="style/default.css/imgs/recON.png" alt="Recording" id="rec" style="float:left;margin-left:30%">
-				<img src="style/default.css/imgs/restart.png" alt="restart" id="restart" style="float:left;margin-left:20px;margin-top:5px;">
-				<img src="style/default.css/imgs/valid.png" alt="valid" id="valid" style="float:left;margin-left:20px;margin-top:5px;">
-				<br/>				
+		        <legend class="form-jr-heading" style="text-align:center; font-style:bold;"><?php echo $lang['card_description']; ?></legend>
+					<div id='card'>
+						<table class="table table-hover" style="text-align:center;">
+							<thead>
+								<tr>
+									<td title='<?php echo $lang["word_to_find"] ?>'><p><?php echo $this->res['mot']; ?><p></td>
+								</tr>
+							</thead>
+							<tbody style="background-color:#F8E1E8;" title='<?php echo $lang["wordForbid"] ?>'>
+								<tr>
+									<td>
+										<p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou1'].'</p></br>'; ?>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou2'].'</p></br>'; ?>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>
+											<img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou3'].'</p></br>'; ?>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou4'].'</p></br>'; ?>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou5'].'</p></br>'; ?>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<center>
+						<table>
+							<tr> <th id="countdown" class="timer">
+								</th>
+							</tr>
+						</table>
+					</center> 	
+					<img src="style/default.css/imgs/recON.png" alt="Recording" id="rec1" style="float:left;margin-left:30%">
+					<button type="button" id='restart' title="restart recording"  class="btn btn-default"><img src="style/default.css/imgs/restart.png" alt="restart" id="restart now" style="float:left;"></button>
+					<button type="button"  id="valid" title = "send recording"  class="btn btn-default"><img src="style/default.css/imgs/valid.png" alt="valider" id="valider" style="float:left;"></button>
+					<br/>					
+		</div>	
+			<div id="thirdPage">
 				<dl>
 					<p style="text-align:center;">
 					<audio id="preview"></audio>
 					</p>
 					<hr/>
-					<div id="container" style="padding:1em 2em;"></div>
+					<div id="container"></div>
 				</dl>
 				<dl> <p id="audiovide"></p></dl>
-				<div id="form-cmd"style="visibility: hidden"> <!-- CHECKKKKKK?! -->
-				
-				<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" 
-				 name="submit_form" value="<?php echo $lang['validate']; ?>"/> 
-			
-		</div>
-		 </form>
-	</div>
+					<div id="form-cmd"style="text-align:center;" >
+               				      <input type="submit" class="btn btn-danger" id="abandon_form" 
+                                               name="abandon_form" title="Erase recording" value="<?php echo $lang['abandonner'];?>" onclick="delaySubmit(); return false; "/>
+				 		
+						<input class="btn btn-success" type="submit" id="submit_form" title="Save recording" 
+						 name="submit_form" style="margin-left:3%;" value="<?php echo $lang['validate'];?>"/> 
+					</div>
+			</div>
+		</form>
+	<?php } ?>
+	</div>			
 </div>
 
 <!--
 	ici rajouter un message d'erreur quand aucune carte n'existe dans la langue de l'utilisateur
 -->
+<audio class="audioDemo" controls preload="none" style="visibility:hidden;"> 
+   <source src="audio/test.mp3" type="audio/mpeg">
+</audio>
+
+<script type="text/javascript" src="controllersJS/timer.js"></script>
+<script type="text/javascript" src="controllersJS/popup.js"></script>
+<script type="text/javascript" src="controllersJS/oracle.recorder.js"></script>
+
+<!-- code spécifique -->
+
+<script type="text/javascript" src="modelJS/TODO.js"></script>
 <script>
-// au moment de l'appel à la méthode getUserMedia
-var recorder, recordVideo;
-var record = document.getElementById('record');
-var stop = document.getElementById('stop');
-var deleteFiles = document.getElementById('delete');
 
-var recButton;
-var audio = document.querySelector('audio');
-
-var recordAudio = document.getElementById('record-audio');
-// var recordVideo = document.getElementById('record-video');
-var preview = document.getElementById('preview');
-
-var container = document.getElementById('container');
-var countdownTimer;
-
-var recordIsOn;
-var audioStream;
-var fileName;	
-
-var seconds = 70;
-
-
-navigator.getUserMedia = navigator.getUserMedia       ||
-					   navigator.webkitGetUserMedia ||
-					   navigator.mozGetUserMedia    ||
-					   null;
-					   
-					   
-// JQUERY permettant d'afficher la bonne page selon l'action effectuée
-$("#secondPage").hide();
-
-$("#record").click(function() {
-$("#firstPage").hide( "slow");
-});					   
-
-//Bouton Rec qui clignote					   
-$("#rec").fadeOut(900).delay(500).fadeIn(900);								
-			   
-	
 // Timer
-// Intialisation du timerà 80 secondes, le popup étant de 10 secondes maximum.
+var monChrono = new MyTimer(renders, <?php echo $this->time; ?> , finChrono, 10,pressurise);
 
-function secondPassed() {
-    var minutes = Math.round((seconds - 30)/60);
-    var remainingSeconds = seconds % 60;
-    if (remainingSeconds < 10) {
-        remainingSeconds = "0" + remainingSeconds;  
+function handleSubmit(){
+	document.getElementById("descriptioncarte").submit();
     }
-    document.getElementById('countdown').innerHTML = minutes + ":" + remainingSeconds;
-    if (seconds == 0) {
-        clearInterval(countdownTimer);
-	
-        document.getElementById('countdown').innerHTML = "Trop Tard !";
-        document.getElementById("rec").style.visibility="hidden";
-        document.getElementById('form-cmd').style.visibility="visible"; 
-		
-		if(fileName){
-			if(deleteFiles.disabled === true){
-				stop.disabled = true;
-				record.disabled = true;
-				deleteFiles.disabled = true;
-			}
-			else{
-				stop.disabled = true;
-				record.disabled = true;
-				deleteFiles.disabled = true;
-			}
-		}
-		else{
-		document.location.href="index.php?mode=oracle.timeout";
-//			menu();
-		}
-	
-    } else {
-        seconds--;
-    }
-}
+function delaySubmit(){ 
+	deleteAudioVideoFiles();
+        window.setTimeout(handleSubmit, 500); 
+    };
 
 
-function hideRecButton(){
-	if(document.getElementById("rec").style.visibility === "visible"){
-		document.getElementById("rec").style.visibility="hidden";
-	}
-	else{
-		document.getElementById("rec").style.visibility = "visible"
-	}
-
-}
-
-
- record.onclick = function() {
-	
-	record.disabled = true;
-	if (!audioStream){
-		navigator.getUserMedia({
-		audio: true,
-	},
-
-		function(stream) {
-            
-            if (window.IsChrome) stream = new window.MediaStream(stream.getAudioTracks());
-            
-			if (stream.getAudioTracks().length === 0) {
-					console.log('you have no webcam nore mic available on your device');
-			}
-			
-			else {
-				
-				// continuer les actions
-				countdownTimer = setInterval('secondPassed()', 1000);
-				audioStream = stream;
-				
-
-				$("#secondPage").show("slow");
-
-				document.getElementById('card').innerHTML ="<table class=\"table table-hover\" style=\"text-align:center;\"><thead><tr><td title='<?php echo $lang["word_to_find"] ?>'><p><?php echo $this->res['mot']; ?><p></td></tr></thead>"+
-										"<tbody style=\"background-color:#F8E1E8;\" title='<?php echo $lang["wordForbid"] ?>'>"+
-										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou1'].'</p></br>'; ?></td></tr>"+
-										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou2'].'</p></br>'; ?></td></tr>"+
-										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou3'].'</p></br>'; ?></td></tr>"+
-										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou4'].'</p></br>'; ?></td></tr>"+
-										"<tr><td><p><img src='style/default.css/imgs/forbidden.png'></p><p><?php echo $this->res['tabou5'].'</p></br>'; ?></td></tr></tbody></table>";
-										
-				actionToDo(audioStream);
-
-			}
-		},
-
-		function(error){
-			popUp();
-		<!-- alert(error); -->    
-		});
-	}
-	else{	
-		actionToDo(audioStream);
-		}
-		
-}
-
-function actionToDo (stream){
-
-	preview.src = URL.createObjectURL(stream);
-	preview.muted = true;
-
-	
-	recorder = RecordRTC(stream, {
-
-		   onAudioProcessStarted: function() {
-		   document.getElementById("rec").style.visibility="visible";
-		   recButton = setInterval('hideRecButton()', 500);
-
-		}
-	});
-
-	recorder.startRecording();
-	stop.disabled = false;
-
-
-	stop.onclick = function() {
-		document.getElementById('form-cmd').style.visibility="visible"; 
-		record.disabled = true;
-		stop.disabled = true;
-		clearInterval(recButton);
-		document.getElementById("rec").style.visibility="hidden";
-		
-		preview.src = '';
-
-		fileName = 'oracle' + Math.round(Math.random() * 999999) + 1;
-
-			
-			recorder.stopRecording(function(url) {
-				preview.src = url;
-				PostBlob(recorder.getBlob(), 'audio', fileName + '.wav');
-			});
-
-		deleteFiles.disabled = false;
-	};
-
-	deleteFiles.onclick = function() {
-		document.getElementById('form-cmd').style.visibility="hidden";
-		deleteAudioVideoFiles();
-		record.disabled = false;
-	};
-
-
-}
-
-function deleteAudioVideoFiles() {
-	deleteFiles.disabled = true;
-	if (!fileName) return;
-	var formData = new FormData();
-	formData.append('delete-file', fileName);
-	xhr('delete.php', formData, null, null, function(response) {
-		console.log(response);
-	});
-	fileName = null;
-	container.innerHTML = '';
-}
-
-function popUp(){
-	 // Script pour le PopUp  l'ouverture de la page , prévenir l'utilisateur de couper le son
-	$(document).ready(function() {
-	// select the overlay element - and "make it an overlay"
-	$("#facebox").overlay({
-
-	// some mask tweaks suitable for facebox-looking dialogs
-	mask: {
-	// you might also consider a "transparent" color for the mask
-	color: '#000000',
-	// load mask a little faster
-	loadSpeed: 1000,
-	// very transparent
-	opacity: 0.7
-	},
-	// disable this for modal dialog-type of overlays
-	closeOnClick: true,
-	// we want to use the programming API
-	api: true
-
-	// load it after delay
-	})
-	var ol = $("#facebox").overlay({api: true});
-	// wait 20 seconds, then load the overlay
-	setTimeout(function() {
-	ol.load();
-	}, 0);
-	setTimeout(function() {
-	ol.close();
-	document.location.href="index.php"
-	}, 10000);
-	}); 
-}
-// Enregistrement d'un fichiers audio .wav sur le serveur
-
-// PostBlob method uses XHR2 and FormData to submit 
-// recorded blob to the PHP server
-function PostBlob(blob, fileType, fileName) {
-	// FormData
-	var formData = new FormData();
-	formData.append(fileType + '-filename', fileName);
-	formData.append(fileType + '-blob', blob);
-
-	// progress-bar
-	var hr = document.createElement('hr');
-	container.appendChild(hr);
-	var strong = document.createElement('strong');
-	strong.id = 'percentage';
-	strong.innerHTML = fileType + ' oracleupload progress: ';
-	container.appendChild(strong);
-	var progress = document.createElement('progress');
-	container.appendChild(progress); 
-
-
-//Récupération des identifiants pour insertion dans la table enregistrement
-var userid = $("#userid").attr("data-userid");
-var userlang = $("#userlang").attr("data-userlang");
-var cardid = $("#cardid").attr("data-cardid");
-var levelcard = $("#levelcard").attr("data-levelcard");
-
-	// POST the Blob using XHR2
-xhr('save.php?userid="'+userid+'"&userlang="'+userlang+'"&cardid="'+cardid+'"&levelcard="'+levelcard+'"', formData, progress, percentage, function(fileURL) {
-		container.appendChild(document.createElement('hr'));
-
-		var mediaElement = document.createElement(fileType);
-
-		var source = document.createElement('source');
-		var href = location.href.substr(0, location.href.lastIndexOf('/') + 1);
-		source.src = href + fileURL;
-
-   if (fileType == 'audio') source.type = 'audio/mp3';
-
-
-		mediaElement.appendChild(source);
-		mediaElement.muted = false;
-		mediaElement.controls = true;
-		container.appendChild(mediaElement);
-		mediaElement.play();
-
-		progress.parentNode.removeChild(progress);
-		strong.parentNode.removeChild(strong);
-		hr.parentNode.removeChild(hr);
-	});
-}
-
-
-
-function xhr(url, data, progress, percentage, callback) {
-	var request = new XMLHttpRequest();
-	request.onreadystatechange = function() {
-		if (request.readyState == 4 && request.status == 200) {
-			callback(request.responseText);
-		}
-	};
-
-	if (url.indexOf('delete.php') == -1) {
-	request.upload.onloadstart = function() {
-		percentage.innerHTML = 'Upload started...';
-	};
-
-	request.upload.onprogress = function(event) {
-		progress.max = event.total;
-		progress.value = event.loaded;
-		percentage.innerHTML = 'Upload Progress ' + Math.round(event.loaded / event.total * 100) + "%";
-	};
-
-	request.upload.onload = function() {
-		percentage.innerHTML = 'Saved!';
-	};
-	}
-
-	request.open('POST', url);
-	request.send(data); 
-}
 function menu(){
-document.location.href="index.php"
+document.location.href="index.php";
 }
+
+
 
 </script>
 

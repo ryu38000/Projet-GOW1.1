@@ -4,8 +4,11 @@ session_start();
 header('Content-Type: text/html; charset=UTF-8');
 require('./sys/utils.func.php');
 require('./sys/db.class.php');
+require('./sys/variable.php');
 require('./models/user.class.php');
+require('./models/userlvl.class.php');
 require('./languages/language.php');
+
 
 // Initialisation
 if ( isset($_POST['cancel_form']) )
@@ -25,7 +28,6 @@ $userlogged = $user->logged_in();
 $modes = $mode ? explode('.', $mode) : array(); // condition  ? if  :else  
 $modes = array_slice($modes, 0, 1);
 $wmode = implode('.', $modes); // deux premiers paramètres de $mode
-
 
 // Traitement des modes
 $html = false;
@@ -88,6 +90,8 @@ switch ( $wmode )
 				
     default:
         $html = true;
+        unset($_SESSION["CreateCard"]); //Sécurité pour éviter que l'utilisateur ne s'ajoute des points à l'infini lorsqu'il créé une carte (refresh)
+
         include('./views/page.home.html');
         $mode = '';
 }

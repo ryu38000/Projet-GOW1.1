@@ -1,0 +1,48 @@
+<?php $title = 'Devin_menu';
+include('./views/page.header.html');
+include('./sys/load_iso.php');
+
+?>
+<div id="main-container">
+	<div id="center-block">
+	
+			<!-- cette formulaire sert à choisir la langue de jeu-->
+			<form id="select_lang">
+				<h2><?php echo $lang['learning'];?>
+					<select name="chooseLang" size="1" id="chooseLang" onchange="saveLangue()">
+						<?php
+							foreach ($iso as $key => $val) {
+									
+									echo "<option value=" . $key ;
+									if(isset($_SESSION["langDevin"]))
+										{
+											if(strcmp($_SESSION["langDevin"],$key) == 0){ echo " selected"; }
+										}
+									elseif (strcmp($user->langGame,$key) == 0) { echo " selected"; }
+									echo ">" . $val . "</option>";	
+							}
+						?>
+					</select>
+				</h2>
+			</form>
+			<h2><?php echo $lang['start']; ?></h2>
+			<ul id="modes" class="nav nav-tabs">
+				<li type="button"  id="start" class="btn btn-primary btn-lg btn-block" >
+					<a href="?mode=diviner.game" title="diviner_game"><?php echo $lang['game']; ?></a>
+				</li>
+			</ul>
+	</div>
+</div>
+<script>
+function saveLangue() {
+
+			$.post("devinLangue.php","lang="+$('#chooseLang option:selected').val(),function (response){void window.location.reload();
+			});
+
+
+}
+</script>
+<?php
+include('./views/page.footer.html');
+?>
+

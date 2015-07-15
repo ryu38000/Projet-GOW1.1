@@ -1,11 +1,13 @@
 <?php
-        $fileName = '';
+require('./sys/config.php');
+    $fileName = '';
+    $ext = ".ogg";
 	// ajout 15/02
 	//$userid='';
 	//~ session_start();
 	$connect=new mysqli("localhost","tab","innovatab$1","tab");
 
-	//foreach(array('audio') as $type) {
+	foreach(array('audio') as $type) {
 		if (isset($_FILES["audio-blob"])) {
 			echo 'enregistrements/';
 			$fileName = $_POST["audio-filename"];
@@ -27,13 +29,24 @@
 		// récupère dans un tableau de hachage le nom du fichier sans l'extension, l'extension et le chemin
 		$file = pathinfo('./enregistrements/'.$fileName.''); 
 		
-		echo $file['filename'].".mp3";
-		
+				
 		// convertit en mp3
-		exec("avconv -i ./enregistrements/".$file['filename'].".wav -acodec libmp3lame ./enregistrements/".$file['filename'].".mp3"); 
+				if(isset($conversion)){
+					$commande = audio_convert($conversion, $file['filename']);
+					exec($commande); 
+					// Supression du fichier.wav du serveur.	
+					exec("rm ./enregistrements/".$file['filename'].".ogg"); 
+					$ext = ".mp3";	
+					echo $file['filename'].$ext;
+					echo $commande;
+
+				}
+				else{
+					echo $file['filename'].$ext;
+				}
 		
-		// Supression du fichier.wav du serveur.
-		exec("rm ./enregistrements/".$file['filename'].".wav"); 
+		
+
 		
 		// ajout 15/02
 		//$_SESSION['userid']=$userid;
@@ -45,7 +58,7 @@
 		{
 			//renomme le nom du fichier à rentrer dans la BD
 			
-			$fileName=$file['filename'].".mp3";
+			$fileName=$file['filename'].$ext;
 			$sql = 'INSERT INTO enregistrement
                     (cheminEnregistrement,idOracle,OracleLang,tpsEnregistrement,carteID,nivcarte) 
 					 VALUES('.
@@ -58,7 +71,7 @@
 
 			$connect->query($sql);
 		}
-	//}
+	}
 	
 	//fonction pour protéger les caractères qui doivent l'être dans la requête sql
 	function escape($str, $con)
@@ -66,5 +79,9 @@
         return is_string($str) ? '\'' . mysqli_real_escape_string($con, $str) . '\'' : intval($str);
     }
 	
+	function audio_convert($file, $filename){
+		$commandeConv = str_replace(array("%source%", "%target%"), array("./enregistrements/".$filename.".ogg","./enregistrements/".$filename.".mp3"), $file); 
+		return $commandeConv;
+	}
 	
 	?>

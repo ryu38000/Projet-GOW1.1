@@ -1,17 +1,20 @@
 <?php
 $title = 'S\'enregister';
 include('./views/page.header.html');
+include('./sys/load_iso.php');
+include('./controllersJS/display_lang.js');
+
 ?>
 <div id="main-container">
 	<div id="jrForm">
-		<form class="form-jr" role="form" id="register" method="post" action="./">
+		<form class="form-jr" role="form" id="register" method="post" action="./" enctype="multipart/form-data">
 			<?php if ( $this->errors ) { ?>
 			<fieldset class="errors">
 				<legend>Erreurs</legend>
 				<ul>
 					<?php foreach ( $this->errors as $error ) { ?>
 					<li>
-						<?php echo $error; ?>
+						<?php echo $messErrors[$error]; ?>
 					</li>
 					<?php } ?>
 				</ul>
@@ -36,12 +39,74 @@ include('./views/page.header.html');
 					<dd><input type="password" id="password_confirm" name="password_confirm" required="required" value="" /></dd>
 				</dl>
 				<dl>
-					<dt><label for="userlang">Choisissez une langue</label></dt>
+					<dt><label for="profilphoto">Profil</label></dt>
+					<dd><input id="profilphoto" name="profilphoto" type="file" multiple="true">
+					</dd>
+					<input type="hidden" name="profilphot" value="profilphoto">
+				</dl>					
+				<dl>
+					<dt><label for="userlang_spoken" >Choisissez les langues que vous parlez</label></dt>
+					<dd>
+						<datalist id="lang_level">	
+							<option value="Débutant">
+							<option value="Intermédiaire">
+							<option value="Avancé">
+							<option value="Natif">
+						</datalist>
+						<datalist id="iso">
+							<?php
+								$tableLang=$iso;
+								//for($i=0; $i < sizeof($tableLang); $i++){
+								foreach($iso as $value){
+									//echo "<option value=".$tableLang[$i] . ">";
+									echo"<option value=".$value.">";
+								}
+							?>
+						</datalist>
+						<table id="userlang_spoken">
+							<tr>
+								<td width="25%" align="center">Langue</td>
+								<td width="25%" align="center">Niveau</td>
+								<td width="50%" align="center">Langue de jeu</td>
+							</tr>
+							<tr>
+								<td align="center"><input list="iso" type="text" name="choix_langs_1" required="required" size="10"  onchange="updateRadio(this);"/></td>
+								<td align="center"><input list="lang_level" name="choix_niveau_1" required="required" size="10"/></td>
+								<td align="center"><input type="radio" name="lang_game" required="required" /></td>
+							</tr>
+					
+						</table>
+						<table>
+							<tr>
+								<td><button type="button" id="langueAppriseBtn" onClick="dispalyMoreLanguages();" align="center">Ajouter une langue </button></td>
+							</tr>
+							<tr>
+								<td><button type="button" id="langueAppriseCancel" onClick="dispalyLessLanguages();" align="center">Retirer une langue</button></td>
+							</tr>
+						</table>
+					
+				
+					</dd>	
+				</dl>
+
+				<dl>
+					<dt><label for="userlvl">Choisissez un niveau de jeu</label></dt>
+					<dd>
+						<select id="userlvl" name="userlvl" required='required'>
+							<option value ="easy">Facile</option>
+							<option value ="medium">Moyen</option>
+							<option value ="hard">Difficile</option>
+						</select>
+					</dd>
+				</dl>
+
+				<dl>
+					<dt><label for="userlang">Choisissez une langue d'interface</label></dt><!-- userlang= langue d'interface -->
 					<dd>
 						<select id="userlang" name="userlang" >
 							<option value =""></option>
 							<option value ="fr">Français</option>
-							<option value ="en">English</option>
+							<option value ="en">Anglais</option>
 						</select>
 					</dd>
 				</dl>
@@ -59,6 +124,8 @@ include('./views/page.header.html');
 		$(location).attr('href', '?mode=login');
 	}
 </script>
+
+
 <?php
 include('./views/page.footer.html');
 ?>

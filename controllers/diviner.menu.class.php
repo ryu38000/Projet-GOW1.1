@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 class diviner_menu
 {
@@ -28,10 +28,15 @@ class diviner_menu
 			$controller->set_mode($this->mode);
 			return $controller->process();
 		break;
-			default:
-				//print $mode;
+		case 'diviner.game':
 				include('controllers/diviner.class.php');
 				$controller = new diviner_game();
+				$controller->set_mode($this->mode);
+				return $controller->process();
+		break;
+		default:
+				include('controllers/diviner.menu.game.php');
+				$controller = new diviner_menu_game();
 				$controller->set_mode($this->mode);
 				return $controller->process();
 		}

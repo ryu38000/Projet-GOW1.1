@@ -1,17 +1,20 @@
 <?php
 $title = 'Profile';
 include('./views/page.header.html');
+include('./sys/load_iso.php');
+include('./controllersJS/display_lang.js');
+
 ?>
 <div id="main-container">
 	<div id="jrForm">
-		<form class="form-jr" id="edit" method="post" action="./">
+		<form class="form-jr" id="edit" method="post" action="./" enctype="multipart/form-data">
 			<?php if ( $this->errors ) { ?>
 			<fieldset>
 				<legend><?php if(isset($lang['errors'])){$lang['errors'];}?></legend>
 				<ul>
 					<?php foreach ( $this->errors as $error ) { ?>
 					<li>
-						<?php echo $error; ?>
+						<?php echo $lang[$error]; ?>
 					</li>
 					<?php } ?>
 				</ul>
@@ -19,6 +22,15 @@ include('./views/page.header.html');
 			<?php } ?>
 			<fieldset>
 				<legend class="form-jr-heading"><?php $lang['menu_profile']; ?></legend>
+				<?php if($this->photo !=""){ ?> 
+				<img id ="profil" name="profil" src="<?php echo htmlspecialchars($this->photo)?>" height="200" width="200"> 
+				<?php }?>
+				<dl>
+					<dt><label for="profilphoto"><?php echo $lang['photoProfil'];?></label></dt>
+					<dd><input id="profilphoto" name="profilphoto" type="file" multiple="true">
+					</dd>
+					<input type="hidden" name="profilphot" value="profilphoto">
+				</dl>				
 				<dl>
 					<dt><label for="username" ><?php echo $lang['user_username'];?></label></dt>
 					<dd><input type="text" id="username" name="username" required="required" value="<?php echo htmlspecialchars($this->username); ?>" /></dd>
@@ -36,14 +48,104 @@ include('./views/page.header.html');
 					<dd><input type="password" id="password_confirm" name="password_confirm" value="<?php echo $lang['password_confirm'];?>" /></dd>
 				</dl>
 				<dl>
-					<dt><label for="userlang" ><?php echo $lang['user_userlang'];?></label></dt>
+					<dt><label for="userlang_spoken" ><?php echo "Langues parlées";?></label></dt>
 					<dd>
-						<select id="userlang" name="userlang" >
-							<option value ="fr" <?php if ($this->userlang == 'fr') { echo 'selected'; } ?>>Français</option>
-							<option value ="en" <?php if ($this->userlang == 'en') { echo 'selected'; } ?>>English</option>
+						<datalist id="lang_level">	
+							<option value="Débutant">
+							<option value="Intermédiaire">
+							<option value="Avancé">
+							<option value="Natif">
+						</datalist>
+						<datalist id="iso">
+							<?php
+								$tableLang=$iso;
+								//for($i=0; $i < sizeof($tableLang); $i++){
+								foreach($iso as $value){
+									//echo "<option value=".$tableLang[$i] . ">";
+									echo"<option value=".$value.">";
+								}
+							?>
+						</datalist>
+						<table id="userlang_spoken">
+							<tr>
+								<td width="25%" align="center">Langue</td>
+								<td width="25%" align="center">Niveau</td>
+								<td width="50%" align="center">Langue de jeu</td>
+							</tr>
+							<?php
+								$i=1;
+								$spoken_lang = explode(';',$this->spoken_lang);
+								$niveaux = explode(';',$this->niveau);
+								$userlang_game = strlen($this->userlang_game) > 0 ? $iso[$this->userlang_game] : '';
+								if (sizeof($spoken_lang) >= 1 && !empty($spoken_lang[0])) {
+									for ($i=0; $i<sizeof($spoken_lang); $i++) {
+										$l = $spoken_lang[$i];
+										$n = $niveaux[$i];
+										$i++;
+									//foreach ($spoken_lang as $l) {
+										if (strlen($l) > 0) {
+											echo "<tr><td align='center'>" . 
+											"<input list='iso' type='text' name='choix_langs_" . $i . "' required='required' size='10' onchange=\"updateRadio(this);\" value='" . $l . "'/>" .
+											"</td>" .
+											"<td align='center'><input list='lang_level' name='choix_niveau_" . $i . "' required='required' size='10'/ value='" . $n . "'></td>";
+											if (strcmp($l,$userlang_game) == 0) {
+												echo "<td align='center'><input type='radio' name='lang_game'  required='required' checked value='" . $l . "'/></td></tr>";
+											} else {
+												echo "<td align='center'><input type='radio' name='lang_game'  required='required' value='" . $l . "'/>	</td></tr>";
+											}
+										//	$i++;
+										}
+										$i--;
+									}
+								} else if (sizeof($spoken_lang) == 1 && empty($spoken_lang[0])) {
+									echo "<tr><td align='center'>" . 
+										"<input list='iso' type='text' name='choix_langs_1' required='required' size='10' onchange=\"updateRadio(this);\" />" .
+										"</td>" .
+										"<td align='center'><input list='lang_level' name='choix_niveau_1' required='required' size='10'/></td>";
+										echo "<td align='center'><input type='radio' name='lang_game'  required='required'/>	</td></tr>";
+								}
+							?>
+
+					
+						</table>
+						<table>
+							<tr><!-- ici, on include display_lang.js pour ajouter des langues ou les retirer-->
+								<td><button type="button" id="langueAppriseBtn" onClick="dispalyMoreLanguages();" align="center"><?php echo $lang['ajout_langue'];?></button></td>
+							</tr>
+							<tr>
+								<td><button type="button" id="langueAppriseCancel" onClick="dispalyLessLanguages();" align="center"><?php echo "Retirer langue";?></button></td>
+							</tr>
+						</table>
+			
+				
+					</dd>	
+				</dl>
+				<dl>
+					<dt><label for="userlvl">Choisissez un niveau de jeu</label></dt>
+					<dd>
+						<select id="userlvl" name="userlvl" required='required'>
+							<option value ="easy" <?php if($this->userlvl == "easy") {
+							 echo "selected='selected'";  } ?> >Facile</option>
+
+							<option value ="medium" <?php if($this->userlvl == "medium") {
+							 echo "selected='selected'";  } ?> >Moyen</option>
+
+							<option value ="hard" <?php if($this->userlvl == "hard") {
+							 echo "selected='selected'";  } ?> >Difficile</option>
 						</select>
 					</dd>
 				</dl>
+				<dl>
+					<dt><label for="userlang_interface" ><?php echo $lang['user_userlang_interface'];?></label></dt>
+					<dd>
+						<select id="userlang_interface" name="userlang_interface" >
+							<option value ="fr" <?php if ($this->userlang == 'fr') { echo 'selected'; } ?>>Français</option>
+							<option value ="en" <?php if ($this->userlang == 'en') { echo 'selected'; } ?>>Anglais</option>
+						</select>
+					</dd>
+				</dl>
+				
+				
 				<div id="form-cmd">
 					<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php echo $lang['cmd_submit']; ?>" />
 					<input class="btn btn-lg btn-primary btn-block" type="button" id="cancel_form" name="cancel_form"  value="Cancel" onclick="cancel();" />
@@ -58,6 +160,7 @@ include('./views/page.header.html');
 	function cancel(){
 		$(location).attr('href', '?mode=');
 	}
+	
 </script>
 <?php
 include('./views/page.footer.html');

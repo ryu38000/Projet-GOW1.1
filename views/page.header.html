@@ -1,5 +1,13 @@
 <?php
 include('./languages/language.php');
+include('./models/RecupScore.php');
+require('./controllers/notificationMessage.php');
+
+// Notification initialisation
+$notif = new Notification;
+$notif->initNotif();
+$notif->readNotif();
+
 //header('Content-Type: text/html; charset=UTF-8');
 ?><!DOCTYPE html>
 <html>
@@ -22,17 +30,23 @@ include('./languages/language.php');
 		<link href="http://fonts.googleapis.com/css?family=Playball" rel="stylesheet" type="text/css">
 		<link rel="icon" href="style/default.css/imgs/favicon.ico" />
 
-		<script type="text/javascript" src="./style/default.js/countdown/jquery.countdown.js"></script>
+		<!-- For notification style -->
+		<link rel="stylesheet" type="text/css" href="style/default.css/css/ns-default.css" />
+		<link rel="stylesheet" type="text/css" href="style/default.css/css/ns-style-other.css" />
+		
 		
 		<!--Module de son : -->
 		    <script src="style/default.js/RecordRTC.js"></script>
-		    
-		<!--Overlay Oracle :-->
-		<!-- load the jQuery library -->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
 		<!-- ALL jQuery Tools. No jQuery library -->
-		<script src="http://cdn.jquerytools.org/1.2.5/all/jquery.tools.min.js"></script>
-		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
+
+		<!-- For notifications-->
+		<script src="controllersJS/Notification/modernizr.custom.js"></script>
+		<script src="controllersJS/sendSQL.js"></script>
+		<script src="controllersJS/notif.js"></script>
+		
+
     </head>
     <body>
         <div id="header-logo"></div>
@@ -56,6 +70,30 @@ include('./languages/language.php');
 			<li><a href="?mode=profile" title="<?php echo htmlspecialchars($GLOBALS['user']->username); ?>"><?php echo $lang['menu_profile']; ?></a></li>
 			<li><a href="?mode=score" title="score"><?php echo $lang['scores']; ?></a></li>
 			<li><a href="?mode=logout" title="logout"><?php echo $lang['logout']; ?></a></li>
+			<li id="notification_li">
+				<span id="notification_count" ></span>
+				<a href="#" id="notificationLink"><img src="style/default.css/imgs/info.png" style="width:25px;height:25px;"></a>
+				<div id="notificationContainer">
+					<div id="notificationTitle">News</div>
+					<div id="notificationsBody" class="notifications">
+							<?php
+							if($notif->messNotif){?>
+									<script> 
+								var tab = <?php echo json_encode($notif->messNotif); ?>;
+									notifBox(tab);</script>
+							<?php 
+							}
+							else{ ?>
+								<script> $("#notification_count").hide(); </script>
+							<?php }
+							?>
+					</div>
+					<div id="notificationFooter"><a href="#"></a></div>
+				</div>
+			</li>
+			
+
+
 <?php 
 	} else { 
 ?>
@@ -68,4 +106,36 @@ include('./languages/language.php');
 			</div>
 		</div>
 </div>
+<script src="controllersJS/Notification/notificationFx.js"></script>
+<script src="controllersJS/Notification/classie.js"></script>
+<script src="modelJS/notifDynam.js"></script>
+<?php
+	if(isset($_SESSION["notif"])){
+		foreach($_SESSION["notif"] as $key => $value)
+		{ 
+			foreach($_SESSION["notif"][$key] as $k => $v){
+				$scoreUtilisateur = "";
+				if($k != "undefined"){
+					$scoreUtilisateur = score($k);
+					?>
+					<script>
+						notifOn("<?php echo $lang[$v];?>","<?php echo $key; ?>","<?php echo $k; ?>", "<?php echo $scoreUtilisateur; ?>");
+					</script>
+				<?php }
+
+	 		}
+	 		unset($_SESSION["notif"]);
+	 	}
+	}
+?>
+
 	<div class="container">
+	
+	
+	<!--<script>
+		var selection = document.getElementById("select_lang").onchange = function() {
+			var lang_new = this.value;
+			//var user = JSON.parse('<php echo json_encode($user)?>');
+			//user.set_lang(this.value);
+		}
+	</script>-->

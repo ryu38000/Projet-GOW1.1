@@ -48,11 +48,11 @@ class login
 
         if ( empty($this->username) )
         {
-            $this->errors[] = 'You must enter a user name';
+           array_push($this->errors, 'user_name');
         }
         if ( empty($this->password) )
         {
-            $this->errors[] = 'You must enter a password';
+		 array_push($this->errors, 'password');
         }
         if ( !$this->errors )
         {
@@ -83,6 +83,8 @@ class login
 
         $user = user::getInstance();
 		$user->set_login($this->userid);
+        $_SESSION["langDevin"] = $user->langGame;
+        
         redirect('');
     }
 

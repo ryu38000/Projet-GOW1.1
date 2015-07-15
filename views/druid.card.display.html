@@ -13,7 +13,7 @@ include('./views/page.header.html');
 
 					<?php foreach ( $this->errors as $error ) { ?>
 						<li>
-							<?php echo $error; ?>
+							<?php echo $lang[$error]; ?>
 						</li>
 					<?php } ?>
 				</ul>
@@ -28,16 +28,13 @@ include('./views/page.header.html');
 					<dl>
 						
 						<dt><label for="mot"><?php echo $lang['word_to_find'];?></label> : <?php echo $this->res['mot'].'</br>'; ?></dt>
+						<dt><label for="thematique"><?php echo $lang['theme']; ?></label> : <?php echo $this->res['theme_carte'].'</br>'; ?></dt>
 						<dt><label for="tabou1"><?php echo $lang['taboo_1'];?></label> : <?php echo $this->res['tabou1'].'</br>'; ?></dt>
 						<dt><label for="tabou2"><?php echo $lang['taboo_2'];?></label> : <?php echo $this->res['tabou2'].'</br>'; ?></dt>
 						<dt><label for="tabou3"><?php echo $lang['taboo_3'];?></label> : <?php echo $this->res['tabou3'].'</br>'; ?></dt>
 						<dt><label for="tabou4"><?php echo $lang['taboo_4'];?></label> : <?php echo $this->res['tabou4'].'</br>'; ?></dt>
 						<dt><label for="tabou5"><?php echo $lang['taboo_5'];?></label> : <?php echo $this->res['tabou5'].'</br>'; ?></dt>
-					</dl>
-					<dl>
-							<dt><label ><?php echo $lang['well_done'];?></label><dt>
-							<dt><label ><?php echo $lang['points'];?></label><dt>
-							
+						<dt><label for="tabou6"><?php echo $lang['taboo_6'];?></label> : <?php echo $this->res['tabou6'].'</br>'; ?></dt>
 					</dl>
 					<div id="form-cmd">
 						<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php echo $lang['return']; ?>" class="submit_buttons" />

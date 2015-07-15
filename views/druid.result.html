@@ -1,25 +1,18 @@
 <?php
 $title = 'Result Druid';
-include('./views/page.header.html');
-?>
-<div id="main-container">
-	<div id="jrForm">
-		<form class="form-jr" role="form" id="diviner.timeout" method="post" action="./index.php">
-			<fieldset>
-					<legend class="form-jr-heading"><?php echo $lang['well_done'];?></legend>
-						<dl>
-						<dt><label ><?php echo $lang['points'];?></label><dt>
-						</dl>
-					<div id="form-cmd">
-					<input class="btn btn-lg btn-primary btn-block" type="submit" id="submit_form" name="submit_form" value="<?php echo $lang['return']; ?>" class="submit_buttons" />
-					</div>
-			</fieldset>
-		</form>
-	</div>
-</div>
-<div>
+include('./controllers/notificationMessage.php');
 
-</div>
+
+
+//notification pour l'oracle
+$notif = new Notification;
+$notif->initNotif();
+$mess = $this->druidName." : +".$this->points." points";
+$notif->addNotif($this->oracle,$mess,$this->druid);
+
+header('Location: index.php?page.home.html');
+?>
+
 <?php
 include('./views/page.footer.html');
 ?>

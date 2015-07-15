@@ -1,0 +1,60 @@
+<?php
+$title = 'Score';
+include('./views/page.header.html');
+?>
+<div id="main-container">
+	<div id="jrForm">
+			<form class="form-jr" name="score">
+				<?php 
+					foreach($this->usertab as $key => $tab){
+				$i=0;
+				?>
+
+					<table class="table table-hover">
+					      <thead>
+
+						<tr>
+						  <th><?php echo $lang['scores']." ".$key; ?></th>
+						  <th><?php echo $lang['userName']; ?></th>
+						  <th><?php echo $lang['score_oracle']; ?></th>
+						  <th><?php echo $lang['score_druid']; ?></th>
+						  <th><?php echo $lang['score_diviner']; ?></th>
+						  <th><?php echo $lang['score_global']; ?></th>
+						</tr>
+					      </thead>
+					      <tbody>
+					    <?php foreach($tab as $key2 => $tab2){
+					    	$i++;
+					    	if($this->userName  == $key2){
+					    		?>
+					    	<tr class="success">
+					    	<?php 
+					    	}
+					    	else{ ?>
+					    	<tr>
+					   		<?php }
+						?>
+					      
+							<td><?php echo $i; ?></td>
+						  <td><?php echo $key2; ?></td>
+						  <td><?php echo $this->usertab[$key][$key2]["scoreOracle"]; ?></td>
+						  <td><?php echo $this->usertab[$key][$key2]["scoreDruide"]; ?></td>
+						  <td><?php echo $this->usertab[$key][$key2]["scoreDevin"]; ?></td>
+						  <td><?php echo $this->usertab[$key][$key2]["scoreGlobal"]; ?></td>
+						
+					      
+					    
+					
+					</tr>
+					<?php } ?>
+					</tbody>
+					</table> 
+					<?php } ?> 
+				</form>
+	</div>
+</div>
+</div>
+
+<?php
+include('./views/page.footer.html');
+?>

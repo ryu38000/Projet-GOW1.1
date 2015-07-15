@@ -11,6 +11,7 @@ class oracle_card_alea
 	private $mode = '';
 	public $tableau = '';
 	private $boobool = true;
+	private $time;
 	
 	private $mot = '';
 	private $tabou1 = '';
@@ -42,6 +43,10 @@ class oracle_card_alea
 	{
 		
 		$this->submit = isset($_POST['submit_form']);
+		
+		$this->userlvl = userlvl::getInstance();
+		$this->time = $this->userlvl->get_time();
+
 		//quand on a appuyé sur "valider", récupération du formulaire
 		if ( $this->submit )
 		{	
@@ -70,7 +75,8 @@ class oracle_card_alea
 		
 		// la génération automatique de carte n'existe qu'en français pour l'instant
 		if ($this->userlang !== 'fr'){
-			$this->errors = "La génération de carte n'est pas active pour d'autres langues que le français pour l'instant";
+			array_push( $this->errors,'no_card_active');
+
 		}
 		
 		return true;
